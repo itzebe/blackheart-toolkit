@@ -51,7 +51,7 @@ jobs:
       SMTP_FROM: ${{ secrets.SMTP_FROM }}
       MAIL_TO: ${{ secrets.MAIL_TO }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Restore durable monitoring state
         uses: actions/cache/restore@v4

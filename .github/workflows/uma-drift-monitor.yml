@@ -30,7 +30,7 @@ jobs:
       # setting the BLACKHEART_ETH_RPC repository variable.
       BLACKHEART_ETH_RPC: ${{ vars.BLACKHEART_ETH_RPC || 'https://gateway.tenderly.co/public/mainnet' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v5
         with:
