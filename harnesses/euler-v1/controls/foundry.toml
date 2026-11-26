@@ -1,0 +1,16 @@
+# Minimal Foundry project for the differential *control* contract for the
+# Mission 08 Euler V1 harness: our independent minimal fix for the
+# donateToReserves solvency bypass.
+#
+# The control is a patched copy of the affected module (ETokenFixed), compiled
+# against the same vendored Euler source. The verifier runs the same sequence
+# against the vulnerable upstream bytecode and this control to prove the exploit
+# discriminates (the control does not reproduce the hit).
+[profile.default]
+src = "src"
+out = "out"
+optimizer = true
+optimizer_runs = 1000000
+bytecode_hash = "none"
+evm_version = "london"
+allow_paths = [".."]

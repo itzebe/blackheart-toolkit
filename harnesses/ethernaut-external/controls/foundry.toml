@@ -1,0 +1,15 @@
+# Minimal Foundry project for the differential *control* contracts used by the
+# external-source EVM harness for OpenZeppelin Ethernaut.
+#
+# Each control is our minimal fix for a documented Ethernaut level; the verifier
+# runs the same sequence against the vulnerable upstream bytecode and this control
+# to prove the exploit discriminates (the control does not reproduce the hit).
+#
+# These controls are self-contained (no external dependencies), so this project
+# has no `libs` and needs nothing from the vendored Ethernaut tree to build.
+[profile.default]
+src = "src"
+out = "out"
+optimizer = true
+optimizer_runs = 200
+bytecode_hash = "none"

@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+# Free, local equivalent of CI: runs the fast gates before a push leaves the machine.
+# Installed by scripts/install-hooks.sh (git core.hooksPath); no paid runner needed.
+set -eu
+cd "$(git rev-parse --show-toplevel)"
+if ! python3 -c "import pytest" 2>/dev/null; then
+  echo "[pre-push] pytest missing; run: python3 -m pip install -e '.[dev]'" >&2
+  exit 1
+fi
+echo "[pre-push] 1/4 pytest (not slow)"
+python3 -m pytest tests/ -m "not slow" -q
+echo "[pre-push] 2/4 probe benchmark"
+python3 -m blackheart probe --bench
+echo "[pre-push] 3/4 differential"
+python3 -m blackheart differential
+echo "[pre-push] 4/4 attack-class coverage"
+python3 -m blackheart coverage
+echo "[pre-push] OK - all gates passed"

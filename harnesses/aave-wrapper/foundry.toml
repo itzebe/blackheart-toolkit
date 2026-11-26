@@ -1,0 +1,16 @@
+[profile.default]
+src = "src"
+test = "test"
+out = "out"
+libs = ["lib"]
+solc = "0.8.28"
+evm_version = "cancun"
+optimizer = false
+# The wrapper source and its dependencies are fetched (not committed); see
+# fetch-deps.sh and the README. `fs_permissions` is intentionally omitted.
+auto_detect_solc = false
+
+[invariant]
+runs = 200
+depth = 30
+fail_on_revert = false

@@ -1,0 +1,10 @@
+# Echidna config for the adversarial harness. Deterministic: a fixed seed and a
+# fixed test limit so a counterexample always reproduces.
+testMode: property
+testLimit: 50000
+seqLen: 100
+shrinkLimit: 5000
+seed: 0x1234567890abcdef
+corpusDir: corpus/echidna
+coverage: true
+balanceContract: 0

@@ -1,0 +1,23 @@
+{
+  "_policy": "docs/SECURITY_TOOL_COMPATIBILITY.md",
+  "_statuses": [
+    "PASS",
+    "BLOCKED",
+    "INCOMPLETE",
+    "NO_FINDINGS"
+  ],
+  "target_component": "",
+  "repository": "",
+  "commit": "",
+  "control_component": "",
+  "language": "",
+  "language_version": "",
+  "framework": "",
+  "runtime": "",
+  "tool": "",
+  "compatibility_evidence": "",
+  "selection_reason": "",
+  "expected_coverage": "",
+  "known_limitations": "",
+  "smoke_test": "not-run"
+}

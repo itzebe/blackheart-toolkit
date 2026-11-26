@@ -1,0 +1,20 @@
+# Foundry project for the Mission 08 external-source EVM harness: Euler V1.
+#
+# The vulnerable target is the *unmodified* vendored Euler V1 protocol
+# (vendor/euler-contracts, pinned); this project adds only our integration glue:
+#   src/     -- Bootstrap.sol, which deploys and configures the real protocol
+#               exactly as the upstream test harness does (see eTestLib.js), and
+#               exposes the resulting proxy addresses via view getters.
+#   controls/-- ETokenFixed.sol, our independent minimal fix (the published
+#               mitigation: a solvency check on the donation path).
+#
+# Compiler settings match the upstream Hardhat config (solc 0.8.10, optimizer
+# runs 1000000) so the bytecode the engine exercises matches the deployment.
+[profile.default]
+src = "src"
+out = "out"
+optimizer = true
+optimizer_runs = 1000000
+bytecode_hash = "none"
+evm_version = "london"
+remappings = ["euler/=vendor/euler-contracts/contracts/"]

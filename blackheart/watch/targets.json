@@ -1,0 +1,2244 @@
+{
+  "version": 1,
+  "generated_from": "official program pages, repositories and deployment pages verified 2026-11-21",
+  "note": "Every record is independent. Participation gates default to false; monitoring is always allowed.",
+  "targets": [
+    {
+      "slug": "lido",
+      "name": "Lido Finance",
+      "group": "A",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "immunefi"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://immunefi.com/bug-bounty/lido/information/",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        },
+        {
+          "url": "https://immunefi.com/bug-bounty/lido/scope/",
+          "kind": "scope",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "lidofinance/core",
+          "role": "core protocol contracts (includes the former lido-dao repository)",
+          "provenance": "https://github.com/lidofinance/core"
+        }
+      ],
+      "contracts": [
+        {
+          "key": "lido-locator",
+          "chain_id": 1,
+          "address": "0xC1d0b3DE6792Bf6b4b37EccdcC24e45978Cfd2Eb",
+          "name": "LidoLocator",
+          "proxy": true,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        },
+        {
+          "key": "lido-steth",
+          "chain_id": 1,
+          "address": "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
+          "name": "stETH",
+          "proxy": true,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        },
+        {
+          "key": "lido-steth-impl",
+          "chain_id": 1,
+          "address": "0x028271E30a695c0527A0C50cA30603feD004cDb0",
+          "name": "Lido (stETH implementation)",
+          "proxy": false,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        },
+        {
+          "key": "lido-wsteth",
+          "chain_id": 1,
+          "address": "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0",
+          "name": "wstETH",
+          "proxy": false,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        },
+        {
+          "key": "lido-accounting",
+          "chain_id": 1,
+          "address": "0x23ED611be0e1a820978875C0122F92260804cdDf",
+          "name": "Accounting",
+          "proxy": true,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        },
+        {
+          "key": "lido-withdrawal-queue",
+          "chain_id": 1,
+          "address": "0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1",
+          "name": "WithdrawalQueueERC721",
+          "proxy": true,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        },
+        {
+          "key": "lido-withdrawal-vault",
+          "chain_id": 1,
+          "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+          "name": "WithdrawalVault",
+          "proxy": true,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        },
+        {
+          "key": "lido-burner",
+          "chain_id": 1,
+          "address": "0xE76c52750019b80B43E36DF30bf4060EB73F573a",
+          "name": "Burner",
+          "proxy": true,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        },
+        {
+          "key": "lido-vault-hub",
+          "chain_id": 1,
+          "address": "0x1d201BE093d847f6446530Efb0E8Fb426d176709",
+          "name": "VaultHub",
+          "proxy": true,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        },
+        {
+          "key": "lido-predeposit-guarantee",
+          "chain_id": 1,
+          "address": "0xF4bF42c6D6A0E38825785048124DBAD6c9eaaac3",
+          "name": "PredepositGuarantee",
+          "proxy": true,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        },
+        {
+          "key": "lido-operator-grid",
+          "chain_id": 1,
+          "address": "0xC69685E89Cefc327b43B7234AC646451B27c544d",
+          "name": "OperatorGrid",
+          "proxy": true,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        },
+        {
+          "key": "lido-lazy-oracle",
+          "chain_id": 1,
+          "address": "0x5DB427080200c235F2Ae8Cd17A7be87921f7AD6c",
+          "name": "LazyOracle",
+          "proxy": true,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        },
+        {
+          "key": "lido-accounting-oracle",
+          "chain_id": 1,
+          "address": "0x852deD011285fe67063a08005c71a85690503Cee",
+          "name": "AccountingOracle",
+          "proxy": true,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        },
+        {
+          "key": "lido-staking-router",
+          "chain_id": 1,
+          "address": "0xFdDf38947aFB03C621C71b06C9C70bce73f12999",
+          "name": "StakingRouter",
+          "proxy": true,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        },
+        {
+          "key": "lido-staking-vault-factory",
+          "chain_id": 1,
+          "address": "0x02Ca7772FF14a9F6c1a08aF385aA96bb1b34175A",
+          "name": "StakingVaultFactory",
+          "proxy": false,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        },
+        {
+          "key": "lido-validators-exit-bus-oracle",
+          "chain_id": 1,
+          "address": "0x0De4Ea0184c2ad0BacA7183356Aea5B8d5Bf5c6e",
+          "name": "ValidatorsExitBusOracle",
+          "proxy": true,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        },
+        {
+          "key": "lido-hash-consensus",
+          "chain_id": 1,
+          "address": "0xD624B08C83bAECF0807Dd2c6880C3154a5F0B288",
+          "name": "HashConsensus",
+          "proxy": false,
+          "provenance": "https://docs.lido.fi/deployed-contracts/"
+        }
+      ],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Immunefi program; platform participation is excluded by the operator.",
+          "AI-agent permission not stated in the registry; review policy before any action."
+        ]
+      },
+      "restrictions": [
+        "Revalidate current program scope and deployed-release requirements before testing.",
+        "Prioritise stVaults, VaultHub, StakingVault, OperatorGrid, WithdrawalQueue, Accounting, Burner, Lido, LazyOracle, AccountingOracle, StakingRouter and PredepositGuarantee."
+      ],
+      "known_issues": [],
+      "focus": [
+        "stVaults",
+        "VaultHub",
+        "StakingVault",
+        "OperatorGrid",
+        "WithdrawalQueue",
+        "Accounting",
+        "Burner",
+        "Lido",
+        "LazyOracle",
+        "AccountingOracle",
+        "StakingRouter",
+        "PredepositGuarantee"
+      ],
+      "value_class": "high",
+      "notes": "Deployed addresses are read from the official deployed-contracts page; every one is fingerprinted on-chain."
+    },
+    {
+      "slug": "safe",
+      "name": "Safe",
+      "group": "A",
+      "program_status": "CLOSED",
+      "platforms": [
+        "direct",
+        "immunefi"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://docs.safefoundation.org/security/bug-bounty",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        },
+        {
+          "url": "https://docs.safe.global/advanced/smart-account-bug-bounty",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "safe-fndn/safe-smart-account",
+          "role": "Safe smart account contracts",
+          "provenance": "https://github.com/safe-global/safe-smart-account"
+        },
+        {
+          "repo": "safe-global/safe-deployments",
+          "role": "canonical deployment addresses and code hashes",
+          "provenance": "https://github.com/safe-global/safe-deployments"
+        },
+        {
+          "repo": "safe-global/safe-wallet-monorepo",
+          "role": "Safe web wallet monorepo",
+          "provenance": "https://github.com/safe-global/safe-wallet-web"
+        }
+      ],
+      "contracts": [
+        {
+          "key": "safe-singleton-1.4.1",
+          "chain_id": 1,
+          "address": "0x41675C099F32341bf84BFc5382aF534df5C7461a",
+          "name": "Safe singleton v1.4.1",
+          "proxy": false,
+          "provenance": "https://github.com/safe-global/safe-deployments"
+        },
+        {
+          "key": "safe-proxy-factory-1.4.1",
+          "chain_id": 1,
+          "address": "0x4e1DCf7AD4e460CfD30791CCC4F9c8a4f820ec67",
+          "name": "SafeProxyFactory v1.4.1",
+          "proxy": false,
+          "provenance": "https://github.com/safe-global/safe-deployments"
+        },
+        {
+          "key": "safe-fallback-handler-1.4.1",
+          "chain_id": 1,
+          "address": "0xfd0732Dc9E303f09fCEf3a7388Ad10A83459Ec99",
+          "name": "CompatibilityFallbackHandler v1.4.1",
+          "proxy": false,
+          "provenance": "https://github.com/safe-global/safe-deployments"
+        },
+        {
+          "key": "safe-multisend-1.4.1",
+          "chain_id": 1,
+          "address": "0x9641d764fc13c8B624c04430C7356C1C7C8102e2",
+          "name": "MultiSendCallOnly v1.4.1",
+          "proxy": false,
+          "provenance": "https://github.com/safe-global/safe-deployments"
+        }
+      ],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Prior research recorded the Safe Foundation program closed until 2026-12-01; re-check on/after that date.",
+          "Do not treat the reachable docs page as an active program without re-verification."
+        ]
+      },
+      "restrictions": [
+        "Do not recycle the already-public/fixed approved-hash replay issue #187.",
+        "Do not reopen previously exhausted non-payable paths without materially new evidence."
+      ],
+      "known_issues": [
+        {
+          "id": "SAFE-APPROVED-HASH-REPLAY-187",
+          "summary": "Approved-hash replay issue #187 (public/fixed)",
+          "status": "PUBLIC_FIXED",
+          "keywords": [
+            "approved hash",
+            "hash replay",
+            "#187"
+          ],
+          "do_not_report": true,
+          "monitor": false,
+          "evidence": "prior research record"
+        }
+      ],
+      "focus": [
+        "safe-smart-account",
+        "approved hash",
+        "nonce",
+        "signature"
+      ],
+      "value_class": "high",
+      "notes": "Program status is CLOSED per prior research; the official pages are still monitored for a reopening."
+    },
+    {
+      "slug": "phala",
+      "name": "Phala Network / Phala Cloud",
+      "group": "A",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "direct"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://github.com/Phala-Network/phala-cloud/security/policy",
+          "kind": "security-policy",
+          "official": true,
+          "note": ""
+        },
+        {
+          "url": "https://github.com/Phala-Network/phala-blockchain/blob/master/docs/responsible-disclosure.md",
+          "kind": "security-policy",
+          "official": true,
+          "note": ""
+        },
+        {
+          "url": "https://github.com/Phala-Network/bounty-program",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "Phala-Network/phala-blockchain",
+          "role": "TEE blockchain",
+          "provenance": "https://github.com/Phala-Network/phala-blockchain"
+        },
+        {
+          "repo": "Phala-Network/phala-cloud",
+          "role": "Cloud, KMS, CLI and SDK",
+          "provenance": "https://github.com/Phala-Network/phala-cloud"
+        }
+      ],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Responsible-disclosure policy and bounty-program repository; no third-party platform confirmed.",
+          "AI-agent permission not stated; review before action."
+        ]
+      },
+      "restrictions": [
+        "Monitor Phala Cloud KMS, secret sealing, CLI, SDK and key-substitution security.",
+        "Include PHALA-001 remediation changes but never re-report PHALA-001 as new."
+      ],
+      "known_issues": [
+        {
+          "id": "PHALA-001-KMS-KEY-SUBSTITUTION",
+          "summary": "PHALA-001: KMS key-substitution research (previously reported)",
+          "status": "PREVIOUSLY_REPORTED",
+          "keywords": [
+            "phala-001",
+            "key substitution",
+            "kms key",
+            "sealing key"
+          ],
+          "do_not_report": true,
+          "monitor": true,
+          "evidence": "prior research record"
+        }
+      ],
+      "focus": [
+        "KMS",
+        "secret sealing",
+        "CLI",
+        "SDK",
+        "key substitution"
+      ],
+      "value_class": "medium",
+      "notes": "No on-chain contract inventory recorded; monitoring is repository and advisory based."
+    },
+    {
+      "slug": "zircuit",
+      "name": "Zircuit",
+      "group": "A",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "direct"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://docs.zircuit.com/info/security/bug-bounty",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        },
+        {
+          "url": "https://docs.zircuit.com/info/security/bug-bounty-zircuit-core",
+          "kind": "scope",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "zircuit-labs/zkr-monorepo-public",
+          "role": "L2/bridge monorepo",
+          "provenance": "https://github.com/zircuit-labs/zkr-monorepo-public"
+        },
+        {
+          "repo": "zircuit-labs/consensus-proxy",
+          "role": "consensus proxy",
+          "provenance": "https://github.com/zircuit-labs/consensus-proxy"
+        }
+      ],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Official docs program; AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "The previous delayed NAV / stale PPS issue is explicitly excluded and must never be recycled."
+      ],
+      "known_issues": [
+        {
+          "id": "ZIRCUIT-DELAYED-NAV-STALE-PPS",
+          "summary": "Delayed NAV / stale price-per-share issue (excluded)",
+          "status": "EXCLUDED",
+          "keywords": [
+            "delayed nav",
+            "stale nav",
+            "stale pps",
+            "price per share"
+          ],
+          "do_not_report": true,
+          "monitor": false,
+          "evidence": ""
+        }
+      ],
+      "focus": [
+        "bridge",
+        "withdrawal",
+        "NAV",
+        "price per share",
+        "accounting"
+      ],
+      "value_class": "high",
+      "notes": "No verified mainnet contract addresses recorded; repository and policy monitoring only."
+    },
+    {
+      "slug": "frax",
+      "name": "Frax Finance",
+      "group": "A",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "direct"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://docs.frax.finance/smart-contracts/bug-bounty",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "FraxFinance/frax-solidity",
+          "role": "Solidity contracts (Fraxlend, Fraxswap, frxETH, Flox)",
+          "provenance": "https://github.com/FraxFinance/frax-solidity"
+        },
+        {
+          "repo": "FraxFinance/fraxtal",
+          "role": "Fraxtal chain",
+          "provenance": "https://github.com/FraxFinance/fraxtal"
+        }
+      ],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Official docs program; AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "FraxNet, Hop v2 and FXB were previously reviewed without an attacker-profitable live-deployment path.",
+        "Require concrete new code, deployment or state changes before reopening those paths.",
+        "Also monitor Fraxlend, Fraxswap, frxETH and Flox."
+      ],
+      "known_issues": [
+        {
+          "id": "FRAX-FRAXNET-HOPV2-FXB",
+          "summary": "FraxNet / Hop v2 / FXB paths previously investigated without a live fund-loss path",
+          "status": "PREVIOUSLY_INVESTIGATED",
+          "keywords": [
+            "fraxnet",
+            "hop v2",
+            "fxb"
+          ],
+          "do_not_report": true,
+          "monitor": false,
+          "evidence": ""
+        }
+      ],
+      "focus": [
+        "Fraxlend",
+        "Fraxswap",
+        "frxETH",
+        "Flox"
+      ],
+      "value_class": "high",
+      "notes": "No verified mainnet contract addresses recorded; repository and policy monitoring only."
+    },
+    {
+      "slug": "whitechain",
+      "name": "Whitechain Bridge",
+      "group": "A",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "hackenproof"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://hackenproof.com/programs/whitechain-bridge",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "whitechain-labs/bridge-contracts",
+          "role": "WCH-ETH / WCH-TRON bridge and mapper contracts",
+          "provenance": "https://github.com/whitechain-labs/bridge-contracts"
+        }
+      ],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "HackenProof program; platform participation is excluded by the operator.",
+          "AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "Smart-contract scope only (WCH-ETH Bridge, WCH-TRON Bridge, Mapper and direct dependencies).",
+        "Strict confidentiality; no public disclosure.",
+        "Investigate signature verification, replay protection, authorization, cross-chain accounting and UUPS upgrades."
+      ],
+      "known_issues": [],
+      "focus": [
+        "signature verification",
+        "replay protection",
+        "authorization",
+        "cross-chain accounting",
+        "UUPS upgrade",
+        "mapper"
+      ],
+      "value_class": "high",
+      "notes": "Bridge contract addresses are supplied by deployment environment variables, not committed; no verified address inventory recorded."
+    },
+    {
+      "slug": "ticko",
+      "name": "Ticko",
+      "group": "A",
+      "program_status": "TESTNET_ONLY",
+      "platforms": [],
+      "policy_urls": [
+        {
+          "url": "https://bug-bounties.as93.net/ticko/",
+          "kind": "program",
+          "official": false,
+          "note": "community-maintained listing"
+        },
+        {
+          "url": "https://github.com/lissy93/bug-bounties/issues/301",
+          "kind": "program",
+          "official": false,
+          "note": "community program record"
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Prior authorization was Testnet-only.",
+          "Do not test Mainnet, Beta or production unless current official rules clearly authorize it and conflicting language is resolved."
+        ]
+      },
+      "restrictions": [
+        "Testnet only unless current official rules clearly authorize Mainnet/Beta/production.",
+        "Conflicting authorization language must be resolved before any testing."
+      ],
+      "known_issues": [],
+      "focus": [
+        "testnet",
+        "authorization"
+      ],
+      "value_class": "medium",
+      "notes": "No official program page and no repository were confirmed; monitoring is limited to the community record."
+    },
+    {
+      "slug": "cygnus",
+      "name": "Cygnus Finance",
+      "group": "B",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "direct"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://wiki.cygnus.finance/whitepaper/cygnus-network/bug-bounty",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Official wiki program; AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "No verified public repository or contract address recorded; revalidate scope before any action."
+      ],
+      "known_issues": [],
+      "focus": [
+        "collateral",
+        "liquidation",
+        "accounting",
+        "oracle"
+      ],
+      "value_class": "medium",
+      "notes": "Policy monitoring only until an official code or deployment source is verified."
+    },
+    {
+      "slug": "across",
+      "name": "Across Protocol",
+      "group": "B",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "direct",
+        "immunefi"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://docs.across.to/introduction/bug-bounty",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        },
+        {
+          "url": "https://docs.across.to/resources/bug-bounty",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "across-protocol/contracts",
+          "role": "SpokePool, HubPool and periphery contracts",
+          "provenance": "https://github.com/across-protocol/contracts"
+        }
+      ],
+      "contracts": [
+        {
+          "key": "across-hub-pool",
+          "chain_id": 1,
+          "address": "0xc186fA914353c44b2E33eBE05f21846F1048bEda",
+          "name": "HubPool",
+          "proxy": false,
+          "provenance": "https://github.com/across-protocol/contracts"
+        },
+        {
+          "key": "across-spoke-mainnet",
+          "chain_id": 1,
+          "address": "0x5c7BCd6E7De5423a257D81B442095A1a6ced35C5",
+          "name": "SpokePool (Ethereum)",
+          "proxy": true,
+          "provenance": "https://github.com/across-protocol/contracts"
+        },
+        {
+          "key": "across-periphery",
+          "chain_id": 1,
+          "address": "0x4e9ef0a5fe749079dd11e68aad5d75fccfaaf9af",
+          "name": "SpokePoolPeriphery",
+          "proxy": false,
+          "provenance": "https://github.com/across-protocol/contracts"
+        }
+      ],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Official docs program; AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "Revalidate scope and deployed-release requirements before testing."
+      ],
+      "known_issues": [],
+      "focus": [
+        "SpokePool",
+        "HubPool",
+        "relayer",
+        "cross-chain accounting",
+        "signature"
+      ],
+      "value_class": "high",
+      "notes": "The three deployed contracts are the same addresses the existing UMA/Across drift monitor uses."
+    },
+    {
+      "slug": "bnb",
+      "name": "BNB Chain",
+      "group": "B",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "direct"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://bugbounty.bnbchain.org/",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        },
+        {
+          "url": "https://bugbounty.bnbchain.org/scope-policy",
+          "kind": "scope",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "bnb-chain/bsc",
+          "role": "BSC chain client",
+          "provenance": "https://github.com/bnb-chain/bsc"
+        }
+      ],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Official program; AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "No verified contract inventory recorded; chain-level and repository monitoring only."
+      ],
+      "known_issues": [],
+      "focus": [
+        "consensus",
+        "bridge",
+        "cross-chain",
+        "validator"
+      ],
+      "value_class": "high",
+      "notes": "Program scope is chain-level; no single contract address is recorded."
+    },
+    {
+      "slug": "morpheus",
+      "name": "Morpheus",
+      "group": "B",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "direct"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://gitbook.mor.org/security-audits/morpheus-bug-bounty-program",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        },
+        {
+          "url": "https://github.com/MorpheusAIs/Docs/blob/main/Security%20Audit%20Reports/Bug%20Bounty%20Program.md",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "MorpheusAIs/SmartContracts",
+          "role": "Builder and capital protocol contracts",
+          "provenance": "https://github.com/MorpheusAIs/SmartContracts"
+        },
+        {
+          "repo": "MorpheusAIs/Docs",
+          "role": "security and audit documentation",
+          "provenance": "https://github.com/MorpheusAIs/Docs"
+        }
+      ],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Official GitBook program; AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "Previously identified Base target families: BuildersV4, BuildersTreasuryV2, RewardPool, FeeConfig and the Distribution library.",
+        "Revalidate the current official scope and deployed addresses before any action."
+      ],
+      "known_issues": [],
+      "focus": [
+        "BuildersV4",
+        "BuildersTreasuryV2",
+        "RewardPool",
+        "FeeConfig",
+        "Distribution"
+      ],
+      "value_class": "high",
+      "notes": "Repository config contains testnet chain ids; no verified mainnet contract inventory recorded."
+    },
+    {
+      "slug": "opensea",
+      "name": "OpenSea",
+      "group": "B",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "hackerone"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://hackerone.com/opensea",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "ProjectOpenSea/seaport",
+          "role": "Seaport marketplace contracts",
+          "provenance": "https://github.com/ProjectOpenSea/seaport"
+        }
+      ],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "HackerOne program; platform participation is excluded by the operator.",
+          "AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "Verify current program scope, AI-agent restrictions and Seaport testing requirements before any action."
+      ],
+      "known_issues": [],
+      "focus": [
+        "Seaport",
+        "fulfillment",
+        "signature",
+        "order",
+        "marketplace"
+      ],
+      "value_class": "high",
+      "notes": "HackerOne pages are monitored for policy changes only."
+    },
+    {
+      "slug": "uniswap",
+      "name": "Uniswap",
+      "group": "B",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "direct"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://blog.uniswap.org/v4-bug-bounty",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        },
+        {
+          "url": "https://github.com/Uniswap/v3-core/blob/main/bug-bounty.md",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "Uniswap/v4-core",
+          "role": "v4 core",
+          "provenance": "https://github.com/Uniswap/v4-core"
+        },
+        {
+          "repo": "Uniswap/v3-core",
+          "role": "v3 core",
+          "provenance": "https://github.com/Uniswap/v3-core"
+        },
+        {
+          "repo": "Uniswap/v2-core",
+          "role": "v2 core",
+          "provenance": "https://github.com/Uniswap/v2-core"
+        }
+      ],
+      "contracts": [
+        {
+          "key": "uniswap-v4-poolmanager",
+          "chain_id": 1,
+          "address": "0x000000000004444c5dc75cB358380D2e3dE08A90",
+          "name": "v4 PoolManager",
+          "proxy": false,
+          "provenance": "https://docs.uniswap.org/contracts/v4/deployments"
+        },
+        {
+          "key": "uniswap-v4-position-manager",
+          "chain_id": 1,
+          "address": "0xbd216513d74c8cf14cf4747e6aaa6420ff64ee9e",
+          "name": "v4 PositionManager",
+          "proxy": false,
+          "provenance": "https://docs.uniswap.org/contracts/v4/deployments"
+        },
+        {
+          "key": "uniswap-v4-position-descriptor",
+          "chain_id": 1,
+          "address": "0xd1428ba554f4c8450b763a0b2040a4935c63f06c",
+          "name": "v4 PositionDescriptor",
+          "proxy": false,
+          "provenance": "https://docs.uniswap.org/contracts/v4/deployments"
+        },
+        {
+          "key": "uniswap-v4-quoter",
+          "chain_id": 1,
+          "address": "0x99bd42B2B22e531f283b7F8a86dFf631EB16A9D1",
+          "name": "v4 Quoter",
+          "proxy": false,
+          "provenance": "https://docs.uniswap.org/contracts/v4/deployments"
+        },
+        {
+          "key": "uniswap-v4-state-view",
+          "chain_id": 1,
+          "address": "0x7ffe42c4a5deea5b0fec41c94c136cf115597227",
+          "name": "v4 StateView",
+          "proxy": false,
+          "provenance": "https://docs.uniswap.org/contracts/v4/deployments"
+        },
+        {
+          "key": "uniswap-universal-router",
+          "chain_id": 1,
+          "address": "0x66a9893cc07d91d95644aedd05d03f95e1dba8af",
+          "name": "Universal Router",
+          "proxy": false,
+          "provenance": "https://docs.uniswap.org/contracts/v4/deployments"
+        },
+        {
+          "key": "permit2",
+          "chain_id": 1,
+          "address": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+          "name": "Permit2",
+          "proxy": false,
+          "provenance": "https://docs.uniswap.org/contracts/v4/deployments"
+        }
+      ],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Official program; AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "A bug bounty is not a licence to test mainnet; local-fork validation only."
+      ],
+      "known_issues": [],
+      "focus": [
+        "v4-core",
+        "PoolManager",
+        "hooks",
+        "flash accounting",
+        "Permit2"
+      ],
+      "value_class": "high",
+      "notes": "v4 Ethereum addresses are read from the official deployments page and fingerprinted on-chain."
+    },
+    {
+      "slug": "folks",
+      "name": "Folks Finance",
+      "group": "B",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "immunefi"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://immunefi.com/bug-bounty/folksfinance/information/",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        },
+        {
+          "url": "https://immunefi.com/bug-bounty/folksfinance/scope/",
+          "kind": "scope",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "Folks-Finance/xchain-contracts",
+          "role": "cross-chain contracts",
+          "provenance": "https://github.com/Folks-Finance/xchain-contracts"
+        },
+        {
+          "repo": "Folks-Finance/folks-router",
+          "role": "router",
+          "provenance": "https://github.com/Folks-Finance/folks-router"
+        },
+        {
+          "repo": "Folks-Finance/folks-staking-contracts",
+          "role": "staking contracts",
+          "provenance": "https://github.com/Folks-Finance/folks-staking-contracts"
+        }
+      ],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Immunefi program; platform participation is excluded by the operator.",
+          "AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "No verified deployed address inventory recorded; repository and policy monitoring only."
+      ],
+      "known_issues": [],
+      "focus": [
+        "lending",
+        "liquidation",
+        "cross-chain",
+        "staking"
+      ],
+      "value_class": "high",
+      "notes": "Repositories are official Folks-Finance repositories; contract addresses are not yet recorded."
+    },
+    {
+      "slug": "fairscale",
+      "name": "FairScale",
+      "group": "B",
+      "program_status": "NO_PUBLIC_PROGRAM_FOUND",
+      "platforms": [],
+      "policy_urls": [],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "No official bounty program or official repository was confirmed."
+        ]
+      },
+      "restrictions": [
+        "No official bounty program or official repository was confirmed."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "No official bounty program or official repository was confirmed."
+    },
+    {
+      "slug": "panta",
+      "name": "Panta",
+      "group": "B",
+      "program_status": "NO_PUBLIC_PROGRAM_FOUND",
+      "platforms": [],
+      "policy_urls": [],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "No official bounty program was confirmed; only a Panta x NectarFi trading competition was found."
+        ]
+      },
+      "restrictions": [
+        "No official bounty program was confirmed; only a Panta x NectarFi trading competition was found."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "No official bounty program was confirmed; only a Panta x NectarFi trading competition was found."
+    },
+    {
+      "slug": "nectarfi",
+      "name": "NectarFi",
+      "group": "B",
+      "program_status": "NO_PUBLIC_PROGRAM_FOUND",
+      "platforms": [],
+      "policy_urls": [],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "No official bounty program was confirmed; only a Panta x NectarFi trading competition was found."
+        ]
+      },
+      "restrictions": [
+        "No official bounty program was confirmed; only a Panta x NectarFi trading competition was found."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "No official bounty program was confirmed; only a Panta x NectarFi trading competition was found."
+    },
+    {
+      "slug": "plether",
+      "name": "Plether",
+      "group": "C",
+      "program_status": "AUDIT_COMPETITION",
+      "platforms": [
+        "immunefi"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://immunefi.com/audit-competition/plether/information/",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Immunefi audit competition, not a standing bug bounty.",
+          "Platform participation is excluded by the operator."
+        ]
+      },
+      "restrictions": [
+        "An audit competition has its own rules and deadline; do not treat it as a standing program."
+      ],
+      "known_issues": [],
+      "focus": [
+        "perpetuals",
+        "oracle",
+        "liquidation"
+      ],
+      "value_class": "medium",
+      "notes": "Policy monitoring only; no official repository or contract inventory confirmed."
+    },
+    {
+      "slug": "coingecko",
+      "name": "CoinGecko",
+      "group": "C",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "hackenproof"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://support.coingecko.com/hc/en-us/articles/4539176152089-How-Can-I-Participate-in-the-CoinGecko-Bug-Bounty-Program",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        },
+        {
+          "url": "https://hackenproof.com/programs/coingecko",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "HackenProof program; platform participation is excluded by the operator.",
+          "AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "Passive monitoring; no official repository confirmed."
+      ],
+      "known_issues": [],
+      "focus": [
+        "api",
+        "web",
+        "authentication"
+      ],
+      "value_class": "medium",
+      "notes": "No verified code repository recorded; policy monitoring only."
+    },
+    {
+      "slug": "anambra",
+      "name": "Anambra",
+      "group": "C",
+      "program_status": "NO_PUBLIC_PROGRAM_FOUND",
+      "platforms": [],
+      "policy_urls": [],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "No official bounty program was confirmed by search."
+        ]
+      },
+      "restrictions": [
+        "No official program confirmed."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "No official program page or repository confirmed."
+    },
+    {
+      "slug": "dao-contributor",
+      "name": "DAO Contributor",
+      "group": "C",
+      "program_status": "NO_PUBLIC_PROGRAM_FOUND",
+      "platforms": [],
+      "policy_urls": [],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "No official bounty program was confirmed by search."
+        ]
+      },
+      "restrictions": [
+        "No official program confirmed."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "No official program page or repository confirmed."
+    },
+    {
+      "slug": "laborx",
+      "name": "LaborX",
+      "group": "C",
+      "program_status": "NO_PUBLIC_PROGRAM_FOUND",
+      "platforms": [],
+      "policy_urls": [],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "No official bounty program was confirmed by search."
+        ]
+      },
+      "restrictions": [
+        "No official program confirmed."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "No official program page or repository confirmed."
+    },
+    {
+      "slug": "galxe",
+      "name": "Galxe",
+      "group": "C",
+      "program_status": "UNVERIFIED",
+      "platforms": [
+        "third-party-listing"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://bountiesalert.com/program/galxe-com",
+          "kind": "program",
+          "official": false,
+          "note": "third-party listing"
+        },
+        {
+          "url": "https://forum.gravity.xyz/t/galxe-bug-bounty/29509",
+          "kind": "program",
+          "official": false,
+          "note": "community forum"
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Only third-party listings and a community forum were found; no official program page confirmed."
+        ]
+      },
+      "restrictions": [
+        "Do not treat a third-party listing as authorization."
+      ],
+      "known_issues": [],
+      "focus": [
+        "contracts",
+        "quest",
+        "api"
+      ],
+      "value_class": "medium",
+      "notes": "Program status UNVERIFIED; monitor the listing for a link to an official policy."
+    },
+    {
+      "slug": "layer3",
+      "name": "Layer3",
+      "group": "C",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "hackenproof"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://hackenproof.com/companies/layer3",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "layer3xyz/cubes",
+          "role": "CUBE contracts",
+          "provenance": "https://github.com/layer3xyz/cubes"
+        }
+      ],
+      "contracts": [
+        {
+          "key": "layer3-cube-base",
+          "chain_id": 8453,
+          "address": "0x1195cf65f83b3a5768f3c496d3a05ad6412c64b7",
+          "name": "CUBE (Base)",
+          "proxy": false,
+          "provenance": "https://github.com/layer3xyz/cubes"
+        }
+      ],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "HackenProof program; platform participation is excluded by the operator.",
+          "AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "CUBE contract is deployed at the same address on many chains; only Base is recorded."
+      ],
+      "known_issues": [],
+      "focus": [
+        "CUBE",
+        "mint",
+        "signature",
+        "escrow"
+      ],
+      "value_class": "medium",
+      "notes": "One Base deployment is fingerprinted; other chains are a named gap."
+    },
+    {
+      "slug": "elastic",
+      "name": "Elastic",
+      "group": "C",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "hackerone"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://hackerone.com/elastic",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "elastic/elasticsearch",
+          "role": "search engine",
+          "provenance": "https://github.com/elastic/elasticsearch"
+        }
+      ],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "HackerOne program; AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "HackerOne program; platform participation is excluded by the operator.",
+        "Passive monitoring only."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "medium",
+      "notes": "HackerOne page monitored for policy changes only."
+    },
+    {
+      "slug": "mercadolibre",
+      "name": "MercadoLibre",
+      "group": "C",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "hackerone"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://hackerone.com/mercadolibre",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "HackerOne program; AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "HackerOne program; platform participation is excluded by the operator.",
+        "Passive monitoring only.",
+        "Do not revive the known inscripcion.mercadolibre.com false positive without materially new evidence."
+      ],
+      "known_issues": [
+        {
+          "id": "MELI-INSCRIPCION-FALSE-POSITIVE",
+          "summary": "inscripcion.mercadolibre.com false positive",
+          "status": "FALSE_POSITIVE",
+          "keywords": [
+            "inscripcion.mercadolibre.com"
+          ],
+          "do_not_report": true,
+          "monitor": false,
+          "evidence": ""
+        }
+      ],
+      "focus": [],
+      "value_class": "medium",
+      "notes": "HackerOne page monitored for policy changes only."
+    },
+    {
+      "slug": "grab",
+      "name": "Grab",
+      "group": "C",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "hackerone"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://hackerone.com/grab",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "HackerOne program; AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "HackerOne program; platform participation is excluded by the operator.",
+        "Passive monitoring only.",
+        "Do not revive the known cdn.grab.com false positive without materially new evidence."
+      ],
+      "known_issues": [
+        {
+          "id": "GRAB-CDN-FALSE-POSITIVE",
+          "summary": "cdn.grab.com false positive",
+          "status": "FALSE_POSITIVE",
+          "keywords": [
+            "cdn.grab.com"
+          ],
+          "do_not_report": true,
+          "monitor": false,
+          "evidence": ""
+        }
+      ],
+      "focus": [],
+      "value_class": "medium",
+      "notes": "HackerOne page monitored for policy changes only."
+    },
+    {
+      "slug": "spotify",
+      "name": "Spotify",
+      "group": "C",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "hackerone"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://hackerone.com/spotify",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "backstage/backstage",
+          "role": "developer portal",
+          "provenance": "https://github.com/spotify/backstage"
+        }
+      ],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "HackerOne program; AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "HackerOne program; platform participation is excluded by the operator.",
+        "Passive monitoring only."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "medium",
+      "notes": "HackerOne page monitored for policy changes only."
+    },
+    {
+      "slug": "reddit",
+      "name": "Reddit",
+      "group": "C",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "hackerone"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://hackerone.com/reddit",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "HackerOne program; AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "HackerOne program; platform participation is excluded by the operator.",
+        "Passive monitoring only.",
+        "reddit/baseplate is archived (last push 2025-03-24); no active code repository is monitored."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "medium",
+      "notes": "Passive policy monitoring only; the previously tracked repository is archived."
+    },
+    {
+      "slug": "vercel",
+      "name": "Vercel",
+      "group": "C",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "hackerone"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://hackerone.com/vercel",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "vercel/next.js",
+          "role": "Next.js",
+          "provenance": "https://github.com/vercel/next.js"
+        }
+      ],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "HackerOne program; AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "HackerOne program; platform participation is excluded by the operator.",
+        "Passive monitoring only."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "medium",
+      "notes": "HackerOne page monitored for policy changes only."
+    },
+    {
+      "slug": "alchemix",
+      "name": "Alchemix",
+      "group": "C",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "immunefi"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://immunefi.com/bug-bounty/alchemix-1/information/",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        },
+        {
+          "url": "https://immunefi.com/bug-bounty/alchemix-1/scope/",
+          "kind": "scope",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "alchemix-finance/v3",
+          "role": "v3 contracts",
+          "provenance": "https://github.com/alchemix-finance/v3"
+        },
+        {
+          "repo": "alchemix-finance/v2-foundry",
+          "role": "v2 contracts",
+          "provenance": "https://github.com/alchemix-finance/v2-foundry"
+        },
+        {
+          "repo": "alchemix-finance/twap-oracle",
+          "role": "TWAP oracle",
+          "provenance": "https://github.com/alchemix-finance/twap-oracle"
+        }
+      ],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Immunefi program; platform participation is excluded by the operator.",
+          "AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "No verified deployed address inventory recorded; repository and policy monitoring only."
+      ],
+      "known_issues": [],
+      "focus": [
+        "alUSD",
+        "alETH",
+        "transmuter",
+        "accounting",
+        "oracle"
+      ],
+      "value_class": "high",
+      "notes": "Official repositories are monitored; contract addresses are a named gap."
+    },
+    {
+      "slug": "babylon",
+      "name": "Babylon",
+      "group": "C",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "direct"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://docs.babylonlabs.io/guides/security/bug_bounties/",
+          "kind": "program",
+          "official": true,
+          "note": ""
+        },
+        {
+          "url": "https://github.com/babylonlabs-io/babylon/security",
+          "kind": "security-policy",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [
+        {
+          "repo": "babylonlabs-io/babylon",
+          "role": "Babylon chain",
+          "provenance": "https://github.com/babylonlabs-io/babylon"
+        }
+      ],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Official docs program; the Immunefi slug returned 404 during verification.",
+          "AI-agent permission not stated."
+        ]
+      },
+      "restrictions": [
+        "Babylon is a Cosmos chain; EVM contract monitoring does not apply."
+      ],
+      "known_issues": [],
+      "focus": [
+        "Bitcoin staking",
+        "finality",
+        "slashing",
+        "accounting"
+      ],
+      "value_class": "high",
+      "notes": "Repository and policy monitoring only; no EVM contract inventory."
+    },
+    {
+      "slug": "github-security",
+      "name": "GitHub Security Bug Bounty",
+      "group": "D",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "platform"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://bounty.github.com/",
+          "kind": "platform",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Discovery platform: a source for official program information, never automatic authorization."
+        ]
+      },
+      "restrictions": [
+        "Treat platform listings as discovery only; confirm the official program policy independently."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "Platform page monitored for policy/scope changes."
+    },
+    {
+      "slug": "patchstack",
+      "name": "Patchstack",
+      "group": "D",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "platform"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://patchstack.com/bug-bounty/",
+          "kind": "platform",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Discovery platform: a source for official program information, never automatic authorization."
+        ]
+      },
+      "restrictions": [
+        "Treat platform listings as discovery only; confirm the official program policy independently."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "Platform page monitored for policy/scope changes."
+    },
+    {
+      "slug": "hackerone",
+      "name": "HackerOne",
+      "group": "D",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "platform"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://hackerone.com/",
+          "kind": "platform",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Discovery platform: a source for official program information, never automatic authorization."
+        ]
+      },
+      "restrictions": [
+        "Treat platform listings as discovery only; confirm the official program policy independently."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "Platform page monitored for policy/scope changes."
+    },
+    {
+      "slug": "bugcrowd",
+      "name": "Bugcrowd",
+      "group": "D",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "platform"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://www.bugcrowd.com/",
+          "kind": "platform",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Discovery platform: a source for official program information, never automatic authorization."
+        ]
+      },
+      "restrictions": [
+        "Treat platform listings as discovery only; confirm the official program policy independently."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "Platform page monitored for policy/scope changes."
+    },
+    {
+      "slug": "intigriti",
+      "name": "Intigriti",
+      "group": "D",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "platform"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://www.intigriti.com/",
+          "kind": "platform",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Discovery platform: a source for official program information, never automatic authorization."
+        ]
+      },
+      "restrictions": [
+        "Treat platform listings as discovery only; confirm the official program policy independently."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "Platform page monitored for policy/scope changes."
+    },
+    {
+      "slug": "yeswehack",
+      "name": "YesWeHack",
+      "group": "D",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "platform"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://www.yeswehack.com/",
+          "kind": "platform",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Discovery platform: a source for official program information, never automatic authorization."
+        ]
+      },
+      "restrictions": [
+        "Treat platform listings as discovery only; confirm the official program policy independently."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "Platform page monitored for policy/scope changes."
+    },
+    {
+      "slug": "immunefi",
+      "name": "Immunefi",
+      "group": "D",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "platform"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://immunefi.com/",
+          "kind": "platform",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Discovery platform: a source for official program information, never automatic authorization."
+        ]
+      },
+      "restrictions": [
+        "Treat platform listings as discovery only; confirm the official program policy independently."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "Platform page monitored for policy/scope changes."
+    },
+    {
+      "slug": "hackenproof",
+      "name": "HackenProof",
+      "group": "D",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "platform"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://hackenproof.com/",
+          "kind": "platform",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Discovery platform: a source for official program information, never automatic authorization."
+        ]
+      },
+      "restrictions": [
+        "Treat platform listings as discovery only; confirm the official program policy independently."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "Platform page monitored for policy/scope changes."
+    },
+    {
+      "slug": "openbugbounty",
+      "name": "Open Bug Bounty",
+      "group": "D",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "platform"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://www.openbugbounty.org/",
+          "kind": "platform",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Discovery platform: a source for official program information, never automatic authorization."
+        ]
+      },
+      "restrictions": [
+        "Treat platform listings as discovery only; confirm the official program policy independently."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "Platform page monitored for policy/scope changes."
+    },
+    {
+      "slug": "bugbase",
+      "name": "Bugbase",
+      "group": "D",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "platform"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://bugbase.ai/",
+          "kind": "platform",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Discovery platform: a source for official program information, never automatic authorization."
+        ]
+      },
+      "restrictions": [
+        "Treat platform listings as discovery only; confirm the official program policy independently."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "Platform page monitored for policy/scope changes."
+    },
+    {
+      "slug": "bugrap",
+      "name": "BugRap",
+      "group": "D",
+      "program_status": "ACTIVE",
+      "platforms": [
+        "platform"
+      ],
+      "policy_urls": [
+        {
+          "url": "https://bugrap.io/",
+          "kind": "platform",
+          "official": true,
+          "note": ""
+        }
+      ],
+      "repos": [],
+      "contracts": [],
+      "eligibility": {
+        "ai_agent_allowed": "unknown",
+        "participation_authorized": false,
+        "platform_participation_allowed": false,
+        "nigeria_eligible": "unknown",
+        "kyc_required": "unknown",
+        "notes": [
+          "Discovery platform: a source for official program information, never automatic authorization."
+        ]
+      },
+      "restrictions": [
+        "Treat platform listings as discovery only; confirm the official program policy independently."
+      ],
+      "known_issues": [],
+      "focus": [],
+      "value_class": "low",
+      "notes": "Platform page monitored for policy/scope changes."
+    }
+  ]
+}

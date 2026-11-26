@@ -1,0 +1,105 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Lint (ruff)
+        run: python -m ruff check blackheart
+      - name: Type check (mypy)
+        run: python -m mypy blackheart
+      - name: Unit tests
+        run: python -m pytest tests/ -m "not slow" -q
+      - name: Differential (vulnerable breaks, guarded holds)
+        run: python -m blackheart differential
+      - name: Probe benchmark (bug classes; fails on any regression)
+        run: python -m blackheart probe --bench
+      - name: Engine compatibility gate refuses an unauthorised run
+        run: |
+          # An engine run without a validated compatibility record must exit 2 and
+          # must not start a stage. Exit 1 (a lead, no proof) would also be wrong.
+          set +e
+          python -m blackheart hunt --target vulnerable --stages search > hunt.out 2>&1
+          rc=$?
+          set -e
+          cat hunt.out
+          if [ "$rc" -ne 2 ]; then
+            echo "hunt did not refuse an unauthorised run (exit $rc)"; exit 1
+          fi
+          grep -q "compatibility gate BLOCKED" hunt.out
+          echo "hunt correctly refused to run without a compatibility record"
+      - name: Attack-class coverage gate (fails on any unmodelled category)
+        run: python -m blackheart coverage
+      - name: Doctor (engine health; setup steps are warnings, not failures)
+        run: python -m blackheart doctor
+      - name: Engine registry + toolchain manifest agree
+        run: |
+          python -c "from blackheart.engines import SOLIDITY_ENGINES as E; from blackheart.engines.toolchain import load_manifest as L; m=set(L()['engines']); assert set(E)==m, f'registry {set(E)} != manifest {m}'; print(f'{len(m)} engines pinned')"
+      - name: Engine toolchain, dedup and adapter tests (no binaries needed)
+        run: |
+          python -m pytest tests/test_engine_toolchain.py tests/test_engine_dedup.py                            tests/test_solidity_engines.py -q
+      - name: Doctor reports honestly with no toolchain installed
+        run: |
+          # On a bare runner every engine must read MISSING and doctor must exit
+          # non-zero -- it must never claim a tool it did not find.
+          if python -m blackheart engines doctor; then
+            echo "doctor passed on a bare runner: it is not verifying the toolchain"; exit 1
+          fi
+          echo "doctor correctly reported the toolchain as absent"
+
+  external-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: External tool registry is coherent (no fake runnable entry)
+        run: |
+          # The registry must never advertise a "runnable" tool without a command
+          # and a parseable format, and every entry must carry provenance.
+          python - <<'PY'
+          import json, subprocess, sys
+          rows = json.loads(subprocess.check_output(
+              [sys.executable, "-m", "blackheart", "external", "--list", "--json"]))
+          assert rows, "external registry is empty"
+          for r in rows:
+              assert r["license"] and r["docs"] and r["gap"], r["name"]
+              if r["runnable"]:
+                  assert r["command"], r["name"]
+                  assert r["format"] in ("sarif", "json", "text"), r["name"]
+          print(f"external registry coherent: {len(rows)} tools")
+          PY
+      - name: External doctor reports honestly (a missing tool is not an error)
+        run: |
+          # On a bare runner most tools are missing. The doctor must run and
+          # report; a missing tool is never read as installed, and a crash
+          # (exit 2) is the only failure.
+          set +e
+          python -m blackheart external --doctor --json > doctor.json
+          rc=$?
+          set -e
+          cat doctor.json
+          if [ "$rc" -gt 1 ]; then echo "external doctor crashed (exit $rc)"; exit 1; fi
+          python - <<'PY'
+          import json
+          rows = json.load(open("doctor.json"))
+          assert rows, "external doctor produced no rows"
+          states = {r["state"] for r in rows}
+          assert states <= {"installed", "missing", "manual"}, states
+          print(f"external doctor ok: {len(rows)} tools, states={sorted(states)}")
+          PY

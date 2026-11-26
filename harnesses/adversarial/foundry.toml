@@ -1,0 +1,44 @@
+[profile.default]
+src = "src"
+test = "test"
+script = "script"
+out = "out"
+libs = ["lib"]
+solc = "0.8.25"
+optimizer = true
+optimizer_runs = 200
+via_ir = false
+# Reproducibility: no bytecode metadata hash (deterministic artefacts), and a
+# fixed fuzz seed is passed on the command line by the runner, never left random.
+bytecode_hash = "none"
+# forge 1.x generates DeployHelper contracts for dynamic test linking in a
+# virtual `foundry-pp/` tree that is recorded in build-info but never written
+# to disk. crytic-compile (Echidna, Medusa, Slither) reads that build-info and
+# fails with "Unknown file: foundry-pp/DeployHelper<sha>.sol", so the engine
+# never compiles the harness. Turning the feature off keeps build-info
+# self-contained, which is what a compiler-independent consumer needs.
+dynamic_test_linking = false
+fs_permissions = [{ access = "read", path = "./out" }]
+
+# Stateful invariant testing: deterministic seeds are pinned by the caller so a
+# counterexample can always be replayed. fail_on_revert=false lets the fuzzer
+# explore reverting paths (they are part of the search space, not failures).
+[invariant]
+runs = 256
+depth = 64
+fail_on_revert = false
+
+[fuzz]
+runs = 512
+
+# Isolated local mainnet forks. These are *keyless, free, public* endpoints; no
+# paid API key is required and nothing is ever broadcast. Use them only with
+# `forge test --fork-url <name>` (in-process fork) or `anvil --fork-url <name>`
+# (a local node). The fork is read-only: state changes live in the local EVM.
+[rpc_endpoints]
+mainnet = "https://gateway.tenderly.co/public/mainnet"
+sepolia = "https://ethereum-sepolia.publicnode.com"
+base = "https://mainnet.base.org"
+arbitrum = "https://arb1.arbitrum.io/rpc"
+optimism = "https://mainnet.optimism.io"
+

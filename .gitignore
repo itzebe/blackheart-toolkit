@@ -1,0 +1,95 @@
+# Private research evidence — NEVER commit target data or program-confidential material.
+research/private/*
+!research/private/.gitkeep
+
+# Per-finding submission packages (report/evidence/PoC). These are UNPUBLISHED
+# vulnerability research: the repository is public, so committing them would be a
+# disclosure. They live on disk for the operator to review and submit manually.
+artifacts/submissions/
+
+# Local install artifacts (created by install.sh --project) and agent working memory.
+.openhands/
+.agents/
+
+# Local tool state, logs, build artefacts
+*.log
+out/
+cache/
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+venv/
+
+# Secrets: real environment values are never committed. `.env.example` carries
+# names and descriptions only, and IS tracked.
+.env
+.env.*
+!.env.example
+
+# Engine run scratch (per-sandbox, never shared). The patterns are anchored to
+# the scratch directories so they never hide a tracked fixture in a harness.
+.*-scratch/
+.wake/
+crytic-export/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Foundry harness: vendored dependencies and fetched real-target source are
+# re-created by harnesses/<name>/fetch.sh, not committed (keeps the repo small
+# and avoids vendoring a third-party tree).
+harnesses/*/lib/
+harnesses/*/out/
+harnesses/*/cache/
+harnesses/*/vendor/
+harnesses/*/remappings.txt
+harnesses/*/.gitmodules
+harnesses/*/foundry.lock
+# Fuzzing artifacts (Medusa corpus/coverage, crytic-compile exports).
+harnesses/*/medusa-corpus/
+harnesses/*/crytic-export/
+harnesses/*/crytic-artifacts/
+# Nested Foundry project (dvdf-external/controls): its own build output and the
+# generated remappings, re-created by harnesses/dvdf-external/fetch.sh.
+harnesses/*/controls/out/
+harnesses/*/controls/cache/
+harnesses/*/controls/lib/
+harnesses/*/controls/remappings.txt
+
+# Aave aToken wrapper harness: the target source is BUSL-1.1 (target-confidential)
+# and the dependencies are large third-party trees. Both are re-fetched at pinned
+# revisions by harnesses/aave-wrapper/fetch-deps.sh, never committed.
+harnesses/aave-wrapper/src/
+harnesses/aave-wrapper/lib/
+harnesses/aave-wrapper/out/
+harnesses/aave-wrapper/cache/
+
+# Generated Foundry PoCs (blackheart forge-gen) -- regenerate, do not commit
+harnesses/*/test/Generated_*.t.sol
+
+# Local demonstration / research working dirs: private evidence, never committed.
+.blackheart-demo/
+.blackheart/
+
+
+# Build output
+build/
+dist/
+
+# Adversarial harness: engine-generated reports, corpora, and compiler exports.
+harnesses/*/corpus/
+harnesses/*/report.md
+harnesses/*/slither_results.json
+harnesses/*/halmos_results.json
+harnesses/*/crytic-export/
+
+# Stray output from a backgrounded command.
+nohup.out
+
+# Bounty watch: the lock is process-local and is never committed.
+research/bounty-monitor/state/state.lock
+.ruff_cache/
+.pytest_cache/

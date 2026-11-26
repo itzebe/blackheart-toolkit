@@ -1,0 +1,110 @@
+name: uma-drift-monitor
+
+# Watch the live mainnet bytecode of in-scope UMA/Across contracts for post-audit
+# change. On an audited protocol the payable bug is almost always in a change
+# shipped *after* the audit; this pins each deployed contract's keccak-256
+# fingerprint and raises an issue the moment it moves (or a proxy is re-pointed).
+#
+# Read-only: it only calls eth_chainId/eth_blockNumber/eth_getCode/eth_getStorageAt.
+# No secrets, no writes to any chain. The only write is a GitHub issue.
+
+on:
+  schedule:
+    # Daily, 06:17 UTC (off the hour to avoid the cron stampede).
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: uma-drift-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    env:
+      # A free, no-key archive-capable public mainnet endpoint. Override by
+      # setting the BLACKHEART_ETH_RPC repository variable.
+      BLACKHEART_ETH_RPC: ${{ vars.BLACKHEART_ETH_RPC || 'https://gateway.tenderly.co/public/mainnet' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Poll deployed code for drift
+        id: drift
+        run: |
+          set +e
+          python3 -m blackheart monitor run \
+            --baseline monitoring/uma-drift-baseline.json \
+            --json > drift-report.json
+          code=$?
+          set -e
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          echo "monitor exit code: $code"
+          cat drift-report.json
+
+      - name: Open or update a drift issue
+        if: steps.drift.outputs.exit_code == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY' > issue-body.md
+          import json
+          d = json.load(open("drift-report.json"))
+          by_key = {o["key"]: o for o in d["observations"]}
+          lines = [
+              "Deployed-code drift detected in the UMA/Across mainnet monitor.",
+              "",
+              "This means live bytecode (or a proxy's implementation) changed since the",
+              "pinned baseline. That is the trigger to investigate, not a finding by itself.",
+              "",
+              "| target | drift | fingerprint | implementation |",
+              "| --- | --- | --- | --- |",
+          ]
+          for k in d.get("changed", []):
+              o = by_key.get(k, {})
+              fp = o.get("fingerprint", "")[:20]
+              impl = o.get("implementation", "") or "-"
+              lines.append(f"| `{k}` | {d['drift'][k]} | `{fp}` | `{impl}` |")
+          lines += [
+              "",
+              "Next steps: fetch the deployed source (Sourcify v2) and diff it against the",
+              "audited repo HEAD; if the delta is real, reproduce it on a local mainnet fork",
+              "before drawing any conclusion. See `research/uma-protocol-05/MISSION05_REPORT.md`.",
+              "",
+              f"Baseline block: see `monitoring/uma-drift-baseline.json`. Run: {d['retrieved_at']}.",
+              "",
+              "_Posted automatically by the uma-drift-monitor workflow (an AI agent, OpenHands)._",
+          ]
+          print("\n".join(lines))
+          PY
+          title="UMA/Across deployed-code drift detected"
+          existing=$(gh issue list --state open --search "$title in:title" \
+                     --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file issue-body.md
+            echo "commented on existing issue #$existing"
+          else
+            gh issue create --title "$title" --body-file issue-body.md
+          fi
+
+      - name: Fail when the chain could not be read
+        if: steps.drift.outputs.exit_code == '2'
+        run: |
+          echo "::error::monitor could not read one or more targets (RPC gap) - retry"
+          exit 1
+
+      - name: Upload drift report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uma-drift-report
+          path: drift-report.json
+          if-no-files-found: ignore
+          retention-days: 30

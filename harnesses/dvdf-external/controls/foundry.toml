@@ -1,0 +1,14 @@
+# Minimal Foundry project for the differential *control* contracts used by the
+# external-source EVM harness. Each control is our minimal fix for a documented
+# Damn Vulnerable DeFi challenge; the verifier runs the same sequence against the
+# vulnerable upstream bytecode and this control to prove the exploit discriminates.
+#
+# Dependencies are reused from the vendored DVDF tree (git-ignored) so nothing is
+# fetched twice; `libs` points at that tree's `lib`.
+[profile.default]
+src = "src"
+out = "out"
+libs = ["../vendor/dvdf/lib"]
+optimizer = true
+optimizer_runs = 200
+bytecode_hash = "none"
