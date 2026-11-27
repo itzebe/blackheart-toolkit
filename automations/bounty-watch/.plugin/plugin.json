@@ -1,0 +1,22 @@
+{
+  "name": "bounty-watch",
+  "version": "0.1.0",
+  "description": "Hourly, read-only bounty change intelligence across official policy pages, repositories and deployed contracts. Runs the real blackheart watch engine, persists state in the automation KV store, and never tests, submits or contacts a program.",
+  "automation": {
+    "schema_version": "openhands.automation.plugin.v1",
+    "entrypoint": {
+      "runner": "script",
+      "command": "python3 main.py"
+    },
+    "suggested_trigger": {
+      "type": "cron",
+      "schedule": "7 * * * *",
+      "timezone": "UTC"
+    },
+    "config_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    }
+  }
+}

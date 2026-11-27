@@ -1,0 +1,21 @@
+{
+  "name": "example-lending-market",
+  "kind": "smart-contract",
+  "assets": ["user-collateral", "protocol-reserves", "lp-shares"],
+  "entry_points": [
+    "deposit(uint256)",
+    "withdraw(uint256)",
+    "borrow(uint256)",
+    "repay(uint256)",
+    "liquidate(address,uint256)",
+    "setOracle(address)"
+  ],
+  "trust_boundaries": [
+    "market <-> price oracle",
+    "collateral accounting <-> share token",
+    "liquidator <-> position owner"
+  ],
+  "roles": ["depositor", "borrower", "liquidator", "owner", "attacker"],
+  "external_deps": ["Chainlink-style price feed", "ERC20 collateral token", "interest rate model"],
+  "notes": "Example profile used by the README and the acceptance tests."
+}

@@ -1,0 +1,6 @@
+a()
+alpha(uint256)
+b()
+beta(uint256)
+c()
+gamma(uint256)

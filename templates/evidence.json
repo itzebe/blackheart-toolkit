@@ -1,0 +1,11 @@
+{
+  "$comment": "Template for a BLACKHEART evidence record. Artefacts are content-addressed and immutable: writing the same bytes twice is a no-op. Never edit an artefact; add a new one.",
+  "evidence_id": "ev-<sha256-prefix>",
+  "kind": "command-output",
+  "description": "<what this artefact shows>",
+  "sha256": "<full sha256 of the content>",
+  "path": "objects/<ab>/<sha256>",
+  "command": "<the exact command that produced it>",
+  "created_at": "<iso-8601 utc>",
+  "metadata": {"returncode": 0}
+}

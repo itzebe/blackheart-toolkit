@@ -1,0 +1,14 @@
+{
+  "$comment": "Drop your programs here — this file IS the target list. Per program: name, report_to (the official security email), policy_url or policy_text_file, in-scope source_paths / contracts, and requested environments. Environments are gated against the program's own policy text (fork/devnet only if the policy permits; otherwise BLOCKED). No spend/rate cap is imposed. The runner notifies you at NEEDS-SUBMISSION and NEVER submits.",
+  "programs": [
+    {
+      "name": "Exponent",
+      "report_to": "security@exponentlabs.xyz",
+      "policy_url": "https://docs.exponent.finance/user-documentation/audits-bug-bounty",
+      "environments": ["local_fork", "devnet"],
+      "source_paths": ["research/exponent/exponent-core/programs/exponent_core/src"],
+      "contracts": [],
+      "severity_floor": "medium"
+    }
+  ]
+}

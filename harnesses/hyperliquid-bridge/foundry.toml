@@ -1,0 +1,26 @@
+[profile.default]
+# Compile the real, in-scope bridge source fetched into vendor/src by fetch.sh.
+src = "vendor/src"
+test = "test"
+out = "out"
+libs = ["vendor/lib"]
+solc = "0.8.28"
+optimizer = true
+optimizer_runs = 200
+evm_version = "Cancun"
+fs_permissions = [{ access = "read-write", path = "./" }]
+# The bridge reads block.number directly only when chainid == 1337 (its own test hook);
+# otherwise it calls ArbSys. 1337 lets the local harness drive the dispute period by block.
+chain_id = 1337
+
+# Stateful invariant search over the real bridge. Modest so the run stays quick;
+# raise with FOUNDRY_INVARIANT_RUNS / FOUNDRY_INVARIANT_DEPTH for a deeper campaign.
+[invariant]
+runs = 64
+depth = 64
+fail_on_revert = false
+
+# Keyless, free public RPC used only to create a *local* Arbitrum fork. Nothing is
+# ever broadcast; `forge test` runs entirely in-process. Override with BLACKHEART_ARB_RPC.
+[profile.fork]
+eth_rpc_url = "https://arb1.arbitrum.io/rpc"

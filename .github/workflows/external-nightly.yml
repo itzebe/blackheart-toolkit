@@ -1,0 +1,70 @@
+name: external-nightly
+
+# Prove, on a schedule, that the runnable external scanners actually install and
+# are detected -- so "installed" is demonstrated, not assumed. This is heavier
+# than ci.yml (network + Go toolchain), so it runs nightly and on demand, never
+# on every push. A red run means a scanner could not be installed or resolved.
+
+on:
+  schedule:
+    - cron: "17 3 * * *"   # nightly, 03:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install-and-verify-scanners:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
+      - name: Install BLACKHEART
+        run: python -m pip install -e .
+      - name: Install the runnable scanners
+        run: |
+          # semgrep in its own venv -- resolve_tool finds ~/.blackheart/venvs/<tool>/bin
+          # and a system install would shadow this repository's tests/ package.
+          python -m venv "$HOME/.blackheart/venvs/semgrep"
+          "$HOME/.blackheart/venvs/semgrep/bin/pip" install --quiet \
+            --disable-pip-version-check semgrep
+          # Go scanners into ~/go/bin -- resolve_tool searches it explicitly.
+          export GOBIN="$HOME/go/bin"
+          for spec in \
+            github.com/securego/gosec/v2/cmd/gosec@latest \
+            golang.org/x/vuln/cmd/govulncheck@latest \
+            honnef.co/go/tools/cmd/staticcheck@latest \
+            github.com/google/osv-scanner/cmd/osv-scanner@latest \
+            github.com/anchore/grype/cmd/grype@latest \
+            github.com/anchore/syft/cmd/syft@latest \
+            github.com/aquasecurity/trivy/cmd/trivy@latest; do
+            echo "installing ${spec%@*}"
+            go install "$spec"
+          done
+      - name: Assert every runnable scanner is detected (doctor exits 0)
+        run: |
+          # `external --doctor` exits 0 only when no runnable tool is missing.
+          # The JSON check names exactly which scanner is absent if any is.
+          set +e
+          python -m blackheart external --doctor --json > doctor.json
+          rc=$?
+          set -e
+          cat doctor.json
+          python - <<'PY'
+          import json
+          rows = json.load(open("doctor.json"))
+          missing = sorted(r["name"] for r in rows if r["state"] == "missing")
+          installed = sorted(r["name"] for r in rows if r["state"] == "installed")
+          print("installed:", installed)
+          if missing:
+              raise SystemExit(f"MISSING scanners: {missing}")
+          print(f"all {len(installed)} runnable scanners installed")
+          PY
+          if [ "$rc" -ne 0 ]; then
+            echo "external --doctor exited $rc with a missing tool"; exit 1
+          fi

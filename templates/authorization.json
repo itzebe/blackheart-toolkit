@@ -1,0 +1,18 @@
+{
+  "$comment": "Template for a BLACKHEART authorization record. Stored append-only in the authorization registry. Active testing is blocked unless every required check is true AND dated evidence is attached.",
+  "program": "<official program name>",
+  "platform": "<immunefi|hackerone|bugcrowd|vendor>",
+  "target_url": "<program page URL>",
+  "scope_url": "<official scope URL>",
+  "checked_at": "<iso-8601 utc>",
+  "program_active": false,
+  "safe_harbor": false,
+  "poc_required": false,
+  "nigerian_eligible": false,
+  "payout_feasible": false,
+  "zero_cost": false,
+  "assets": {"<asset>": "UNKNOWN"},
+  "evidence": ["ev-<sha256-prefix>"],
+  "notes": "",
+  "verified": false
+}

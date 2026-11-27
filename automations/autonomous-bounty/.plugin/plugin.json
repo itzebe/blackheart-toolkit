@@ -1,0 +1,22 @@
+{
+  "name": "autonomous-bounty",
+  "version": "0.1.0",
+  "description": "Brief-driven autonomous bounty runner around BLACKHEART. Verifies the official policy (fail-closed), gates fork/devnet against the policy, runs the research engines unattended, prepares (never sends) submission packages, and writes NEEDS-SUBMISSION.md for the human. It never submits and never contacts a program.",
+  "automation": {
+    "schema_version": "openhands.automation.plugin.v1",
+    "entrypoint": {
+      "runner": "script",
+      "command": "python3 main.py"
+    },
+    "suggested_trigger": {
+      "type": "cron",
+      "schedule": "17 */6 * * *",
+      "timezone": "UTC"
+    },
+    "config_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    }
+  }
+}

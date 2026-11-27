@@ -1,0 +1,349 @@
+"""Execute a live-V3 sandwich candidate on a pinned Foundry fork.
+
+The live model is only a model. This module renders a standalone Foundry test
+that performs the same front-run / victim / back-run against a real fork at the
+pool's pinned block, then compares the measured attacker profit and victim loss
+with the model. It never signs or broadcasts a transaction; the only chain
+interaction is the read-only fork RPC.
+
+The fork test funds the input token with ``vm.store`` at the token's balance
+mapping slot. WETH9's slot is known; any other token must be named explicitly,
+because guessing a slot would silently fund the wrong storage.
+"""
+
+from __future__ import annotations
+
+import shutil
+import subprocess
+import tempfile
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Callable, Optional
+
+from ..engines.solidity.base import resolve_tool
+
+from ..symbolic.poc_runner import interpret_forge_json, write_poc_project
+from .live_v3 import LiveV3Pool, WETH_ADDRESSES
+from .market import V3MultiSandwichResult
+
+TEST_NAME = "test_live_v3_sandwich"
+RESULT_FILE = "blackheart-live-v3-fork.txt"
+#: Uniswap V3 SwapRouter (the 8-field ``exactInputSingle``) on the chains where
+#: it is deployed. A different router is an explicit operator choice.
+DEFAULT_ROUTER = "0xE592427A0AEce92De3Edee1F18E0157C05861564"
+WETH9_BALANCE_SLOT = 3
+
+Runner = Callable[[list[str], str, int], subprocess.CompletedProcess]
+
+
+@dataclass(frozen=True)
+class ForkValidation:
+    status: str
+    detail: str
+    block: Optional[int]
+    router: str
+    test_name: str = TEST_NAME
+    expected_attacker_profit: Optional[int] = None
+    measured_attacker_profit: Optional[int] = None
+    expected_victim_loss: Optional[int] = None
+    measured_victim_loss: Optional[int] = None
+    tolerance_bps: int = 100
+    test_source: str = ""
+    output: str = ""
+
+    @property
+    def measured_profitable(self) -> bool:
+        return bool(self.measured_attacker_profit is not None
+                    and self.measured_attacker_profit > 0
+                    and (self.measured_victim_loss or 0) > 0)
+
+    def to_dict(self) -> dict:
+        def delta(expected: Optional[int], measured: Optional[int]) -> Optional[int]:
+            return measured - expected if expected is not None and measured is not None else None
+
+        return {
+            "status": self.status,
+            "detail": self.detail,
+            "block": self.block,
+            "router": self.router,
+            "test_name": self.test_name,
+            "expected": {
+                "attacker_profit": self.expected_attacker_profit,
+                "victim_loss": self.expected_victim_loss,
+            },
+            "measured": {
+                "attacker_profit": self.measured_attacker_profit,
+                "victim_loss": self.measured_victim_loss,
+                "profitable": self.measured_profitable,
+            },
+            "delta": {
+                "attacker_profit": delta(self.expected_attacker_profit,
+                                          self.measured_attacker_profit),
+                "victim_loss": delta(self.expected_victim_loss,
+                                      self.measured_victim_loss),
+            },
+            "tolerance_bps": self.tolerance_bps,
+            "test_source": self.test_source,
+            "output": self.output,
+            "note": ("PASS means the fork reproduced the model within tolerance; "
+                     "DIVERGED means both ran and disagreed; a PASS is not a "
+                     "finding or a live opportunity"),
+        }
+
+
+def _tokens(pool: LiveV3Pool, direction: str) -> tuple[str, str]:
+    if direction == "token0->token1":
+        return pool.token0, pool.token1
+    if direction == "token1->token0":
+        return pool.token1, pool.token0
+    raise ValueError("direction must be 'token0->token1' or 'token1->token0'")
+
+
+def render_live_v3_fork_test(
+    pool: LiveV3Pool,
+    direction: str,
+    *,
+    victim_amount_in: int,
+    attacker_amount_in: int,
+    router: str = DEFAULT_ROUTER,
+    balance_slot: Optional[int] = None,
+) -> str:
+    """Render the standalone Foundry test, without importing forge-std."""
+    if victim_amount_in <= 0 or attacker_amount_in <= 0:
+        raise ValueError("victim_amount_in and attacker_amount_in must be positive")
+    token_in, token_out = _tokens(pool, direction)
+    if not token_in or not token_out:
+        raise ValueError("the pool snapshot has no token addresses")
+    slot = balance_slot
+    if slot is None and token_in.lower() in WETH_ADDRESSES:
+        slot = WETH9_BALANCE_SLOT
+    if slot is None:
+        raise ValueError(
+            "the input token's balance slot is unknown; pass balance_slot "
+            "(WETH9 uses 3)")
+    if slot < 0:
+        raise ValueError("balance_slot must be non-negative")
+    return f'''// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+// Generated by BLACKHEART. It executes the model's sandwich on a pinned fork.
+// The only funding is a storage write to the input token's balance mapping;
+// no real account, key or transaction is used.
+
+interface Vm {{
+    function store(address target, bytes32 slot, bytes32 value) external;
+    function snapshot() external returns (uint256);
+    function revertTo(uint256 id) external;
+    function writeFile(string calldata path, string calldata data) external;
+    function toString(uint256 value) external pure returns (string memory);
+    function toString(int256 value) external pure returns (string memory);
+}}
+
+interface IERC20 {{
+    function balanceOf(address account) external view returns (uint256);
+    function approve(address spender, uint256 amount) external returns (bool);
+}}
+
+interface ISwapRouter {{
+    struct ExactInputSingleParams {{
+        address tokenIn;
+        address tokenOut;
+        uint24 fee;
+        address recipient;
+        uint256 deadline;
+        uint256 amountIn;
+        uint256 amountOutMinimum;
+        uint160 sqrtPriceLimitX96;
+    }}
+    function exactInputSingle(ExactInputSingleParams calldata params)
+        external payable returns (uint256);
+}}
+
+contract LiveV3ForkTest {{
+    Vm private constant vm =
+        Vm(address(bytes20(uint160(uint256(keccak256("hevm cheat code"))))));
+    address private constant ROUTER = address(uint160({int(router, 16)}));
+    address private constant TOKEN_IN = address(uint160({int(token_in, 16)}));
+    address private constant TOKEN_OUT = address(uint160({int(token_out, 16)}));
+    uint24 private constant FEE = {pool.fee_pips};
+    uint256 private constant ATTACKER = {attacker_amount_in};
+    uint256 private constant VICTIM = {victim_amount_in};
+    uint256 private constant BALANCE_SLOT = {slot};
+
+    function _swap(address tokenIn, address tokenOut, uint256 amount,
+                   address recipient) internal returns (uint256) {{
+        IERC20(tokenIn).approve(ROUTER, amount);
+        return ISwapRouter(ROUTER).exactInputSingle(
+            ISwapRouter.ExactInputSingleParams({{
+                tokenIn: tokenIn,
+                tokenOut: tokenOut,
+                fee: FEE,
+                recipient: recipient,
+                deadline: block.timestamp,
+                amountIn: amount,
+                amountOutMinimum: 0,
+                sqrtPriceLimitX96: 0
+            }})
+        );
+    }}
+
+    function test_live_v3_sandwich() public {{
+        address victim = address(0xB0B);
+        uint256 total = ATTACKER + VICTIM;
+        vm.store(TOKEN_IN,
+                 keccak256(abi.encode(address(this), BALANCE_SLOT)),
+                 bytes32(total));
+
+        uint256 snap = vm.snapshot();
+        _swap(TOKEN_IN, TOKEN_OUT, VICTIM, victim);
+        uint256 victimOnly = IERC20(TOKEN_OUT).balanceOf(victim);
+        vm.revertTo(snap);
+
+        _swap(TOKEN_IN, TOKEN_OUT, ATTACKER, address(this));
+        _swap(TOKEN_IN, TOKEN_OUT, VICTIM, victim);
+        uint256 victimWith = IERC20(TOKEN_OUT).balanceOf(victim);
+        uint256 acquired = IERC20(TOKEN_OUT).balanceOf(address(this));
+        uint256 returned = _swap(TOKEN_OUT, TOKEN_IN, acquired, address(this));
+        uint256 finalIn = IERC20(TOKEN_IN).balanceOf(address(this));
+        int256 profit = int256(finalIn) - int256(ATTACKER);
+        int256 loss = int256(victimOnly) - int256(victimWith);
+
+        vm.writeFile("{RESULT_FILE}", string.concat(
+            "attacker_profit=", vm.toString(profit),
+            ";victim_loss=", vm.toString(loss),
+            ";returned=", vm.toString(returned),
+            ";victim_only=", vm.toString(victimOnly),
+            ";victim_with=", vm.toString(victimWith)
+        ));
+    }}
+}}
+'''
+
+
+def _forge_path() -> Optional[str]:
+    found = resolve_tool("forge")
+    return found.binary if found is not None else None
+
+
+def _parse_result(text: str) -> dict[str, int]:
+    out: dict[str, int] = {}
+    for item in text.strip().split(";"):
+        if "=" not in item:
+            continue
+        key, value = item.split("=", 1)
+        out[key.strip()] = int(value.strip())
+    return out
+
+
+def _close(expected: int, measured: int, tolerance_bps: int) -> bool:
+    if expected == measured:
+        return True
+    if expected == 0:
+        return abs(measured) <= 1
+    return abs(measured - expected) * 10_000 <= abs(expected) * max(0, tolerance_bps)
+
+
+def run_live_v3_fork_validation(
+    pool: LiveV3Pool,
+    direction: str,
+    *,
+    rpc_url: str,
+    victim_amount_in: int,
+    attacker_amount_in: int,
+    expected: V3MultiSandwichResult,
+    router: str = DEFAULT_ROUTER,
+    balance_slot: Optional[int] = None,
+    tolerance_bps: int = 100,
+    timeout: int = 300,
+    keep_dir: Optional[str] = None,
+    runner: Optional[Runner] = None,
+) -> ForkValidation:
+    """Run the generated sandwich on a fork and compare it with the model."""
+    if not rpc_url:
+        return ForkValidation("BLOCKED", "no RPC endpoint; nothing was run",
+                              pool.block, router)
+    if pool.block is None:
+        return ForkValidation(
+            "BLOCKED", "the pool snapshot has no pinned block; a fork at 'latest' "
+            "would not compare the same state", None, router)
+    try:
+        source = render_live_v3_fork_test(
+            pool, direction, victim_amount_in=victim_amount_in,
+            attacker_amount_in=attacker_amount_in, router=router,
+            balance_slot=balance_slot)
+    except ValueError as exc:
+        return ForkValidation("BLOCKED", str(exc), pool.block, router)
+
+    forge = _forge_path()
+    if forge is None and runner is None:
+        return ForkValidation(
+            "BLOCKED", "forge is not installed on this host; nothing was run",
+            pool.block, router, test_source=source)
+
+    project = Path(keep_dir) if keep_dir else Path(
+        tempfile.mkdtemp(prefix="blackheart-live-v3-fork-"))
+    try:
+        try:
+            write_poc_project(source, project)
+            # vm.writeFile is denied unless the project grants it explicitly.
+            with (project / "foundry.toml").open("a", encoding="utf-8") as handle:
+                handle.write('\nfs_permissions = [{ access = "read-write", path = "./" }]\n')
+        except OSError as exc:
+            return ForkValidation("INCOMPLETE", f"could not write the project: {exc}",
+                                  pool.block, router, test_source=source)
+        command = [forge or "forge", "test", "--json", "--match-test", TEST_NAME,
+                   "--fork-url", rpc_url, "--fork-block-number", str(pool.block)]
+        try:
+            if runner is not None:
+                proc = runner(command, str(project), timeout)
+            else:
+                proc = subprocess.run(command, cwd=str(project), capture_output=True,
+                                      text=True, timeout=timeout)
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            return ForkValidation("INCOMPLETE", f"could not complete: {exc}",
+                                  pool.block, router, test_source=source)
+        output = (proc.stdout or proc.stderr or "")[:8000]
+        status, detail = interpret_forge_json(proc.stdout, TEST_NAME)
+        if status is None:
+            return ForkValidation("INCOMPLETE", detail, pool.block, router,
+                                  test_source=source, output=output)
+        if status == "FAIL":
+            return ForkValidation("FAIL", detail, pool.block, router,
+                                  test_source=source, output=output)
+        result_path = project / RESULT_FILE
+        if not result_path.exists():
+            return ForkValidation(
+                "INCOMPLETE", "the fork test passed but wrote no measurement file",
+                pool.block, router, test_source=source, output=output)
+        try:
+            measured = _parse_result(result_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            return ForkValidation("INCOMPLETE", f"could not parse the measurement: {exc}",
+                                  pool.block, router, test_source=source, output=output)
+        if "attacker_profit" not in measured or "victim_loss" not in measured:
+            return ForkValidation("INCOMPLETE", "the measurement file is missing fields",
+                                  pool.block, router, test_source=source, output=output)
+        exp_profit = expected.attacker_profit
+        exp_loss = expected.victim_loss
+        got_profit = measured["attacker_profit"]
+        got_loss = measured["victim_loss"]
+        matched = (_close(exp_profit, got_profit, tolerance_bps)
+                   and _close(exp_loss, got_loss, tolerance_bps))
+        detail = (f"fork {'matched' if matched else 'diverged from'} the model "
+                  f"at block {pool.block} (tolerance {tolerance_bps} bps)")
+        return ForkValidation(
+            "PASS" if matched else "DIVERGED", detail, pool.block, router,
+            expected_attacker_profit=exp_profit,
+            measured_attacker_profit=got_profit,
+            expected_victim_loss=exp_loss,
+            measured_victim_loss=got_loss,
+            tolerance_bps=tolerance_bps, test_source=source, output=output)
+    finally:
+        if keep_dir is None:
+            shutil.rmtree(project, ignore_errors=True)
+
+
+__all__ = [
+    "DEFAULT_ROUTER", "ForkValidation", "RESULT_FILE", "TEST_NAME",
+    "render_live_v3_fork_test", "run_live_v3_fork_validation",
+]

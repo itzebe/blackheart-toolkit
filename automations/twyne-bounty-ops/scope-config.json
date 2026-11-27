@@ -1,0 +1,18 @@
+{
+  "$comment": "Known Twyne assets and their verified classification. The daily monitor revalidates each against the freshly fetched official scope: an asset is only AUTHORIZED while it still appears in the official in-scope list AND the program checks pass.",
+  "$recorded_facts": "Researcher eligibility and payout feasibility are policy facts established during the manual program review (official Immunefi brief: max $50,000, KYC not required). They are not re-derivable from the program page, so they are recorded here and re-emitted on every authorization refresh so the gate's program checks stay satisfiable.",
+  "program": "Twyne (Immunefi)",
+  "platform": "immunefi",
+  "scope_url": "https://immunefi.com/bug-bounty/twyne/information/",
+  "program_url": "https://immunefi.com/bug-bounty/twyne/",
+  "recorded_facts": {
+    "nigerian_eligible": true,
+    "payout_feasible": true,
+    "zero_cost": true,
+    "poc_required": true
+  },
+  "assets": {
+    "0xTwyne/aave-v3-aToken-wrapper": "AUTHORIZED",
+    "0xTwyne/twyne-contracts-v1": "PASSIVE_ONLY"
+  }
+}

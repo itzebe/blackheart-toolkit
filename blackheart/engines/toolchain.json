@@ -1,0 +1,188 @@
+{
+  "$comment": "Pinned toolchain for BLACKHEART's Solidity analysis engines. This file is the single source of truth for what `blackheart engines bootstrap` installs and what `blackheart engines doctor` verifies. Versions are pinned exactly: a floating version would make a finding unreproducible in another sandbox. Update a pin only with a note explaining why.",
+  "schema_version": 1,
+  "python": {
+    "$comment": "The venvs are built with the interpreter that runs blackheart. Requires >=3.11 (the package floor).",
+    "min": "3.11"
+  },
+  "engines": {
+    "slither": {
+      "version": "0.11.3",
+      "kind": "pip",
+      "package": "slither-analyzer==0.11.3",
+      "venv": "slither",
+      "upstream": "https://github.com/crytic/slither",
+      "license": "AGPL-3.0",
+      "methods": [
+        "static-analysis"
+      ],
+      "target_types": [
+        "solidity-project",
+        "solidity-file"
+      ],
+      "resource_notes": "CPU-bound; a 30k-LOC project compiles in tens of seconds. No network needed after install.",
+      "extra_packages": [
+        "crytic-compile==0.3.11",
+        "solc-select==1.2.0"
+      ],
+      "provides_shared": [
+        "crytic-compile",
+        "solc-select"
+      ]
+    },
+    "wake": {
+      "version": "4.22.2",
+      "kind": "pip",
+      "package": "eth-wake==4.22.2",
+      "venv": "wake",
+      "upstream": "https://github.com/Ackee-Blockchain/wake",
+      "license": "ISC",
+      "methods": [
+        "static-analysis",
+        "property-fuzzing"
+      ],
+      "target_types": [
+        "solidity-project",
+        "solidity-file"
+      ],
+      "resource_notes": "Ships its own Solidity front end, so it needs no solc. Static detectors are fast; its fuzzer is slower.",
+      "extra_packages": []
+    },
+    "halmos": {
+      "version": "0.3.3",
+      "kind": "pip",
+      "package": "halmos==0.3.3",
+      "venv": "halmos",
+      "upstream": "https://github.com/a16z/halmos",
+      "license": "AGPL-3.0",
+      "methods": [
+        "symbolic-execution"
+      ],
+      "target_types": [
+        "foundry-project"
+      ],
+      "resource_notes": "Symbolic execution needs a Foundry project and a solver (z3 is bundled via its dependency). Memory- and time-heavy: a single test can take minutes and the solver can diverge. Always bounded by --solver-timeout and the adapter's wall clock.",
+      "extra_packages": [],
+      "requires_toolchain": [
+        "forge"
+      ]
+    },
+    "echidna": {
+      "version": "2.4.0",
+      "kind": "github-release",
+      "repo": "crytic/echidna",
+      "asset_template": "echidna-{version}-{arch}-linux.tar.gz",
+      "asset_arch": {
+        "x86_64": "x86_64",
+        "aarch64": "aarch64"
+      },
+      "binary": "echidna",
+      "upstream": "https://github.com/crytic/echidna",
+      "license": "AGPL-3.0",
+      "methods": [
+        "property-fuzzing"
+      ],
+      "target_types": [
+        "solidity-file",
+        "foundry-project"
+      ],
+      "resource_notes": "Native binary, no Python. Needs crytic-compile (from the slither venv) and forge to compile a Foundry target. Fuzzing is CPU-bound; --test-limit bounds the work.",
+      "requires_shared": [
+        "crytic-compile"
+      ],
+      "requires_toolchain": [
+        "forge"
+      ]
+    },
+    "medusa": {
+      "version": "1.5.1",
+      "kind": "github-release",
+      "repo": "crytic/medusa",
+      "asset_template": "medusa-linux-{arch}.tar.gz",
+      "asset_arch": {
+        "x86_64": "x64",
+        "aarch64": "arm64"
+      },
+      "binary": "medusa",
+      "upstream": "https://github.com/crytic/medusa",
+      "license": "AGPL-3.0",
+      "methods": [
+        "sequence-fuzzing"
+      ],
+      "target_types": [
+        "foundry-project",
+        "solidity-file"
+      ],
+      "resource_notes": "Native Go binary. Coverage-guided sequence fuzzing is the heaviest engine here: bound testLimit and workers. Needs crytic-compile and forge to compile.",
+      "requires_shared": [
+        "crytic-compile"
+      ],
+      "requires_toolchain": [
+        "forge"
+      ]
+    }
+  },
+  "toolchain": {
+    "forge": {
+      "version": "1.10.0",
+      "kind": "foundryup",
+      "upstream": "https://github.com/foundry-rs/foundry",
+      "license": "MIT OR Apache-2.0",
+      "install_dir": "~/.foundry/bin",
+      "resource_notes": "Required by crytic-compile's Foundry platform, which Slither, Echidna and Medusa all use to compile a Foundry target. Without it, compilation raises FileNotFoundError and the engine exits non-zero -- which must never be read as a clean scan."
+    },
+    "solc": {
+      "version": "0.8.26",
+      "kind": "solc-select",
+      "upstream": "https://github.com/ethereum/solidity",
+      "license": "GPL-3.0",
+      "install_dir": "~/.solc-select/artifacts",
+      "resource_notes": "Installed through solc-select (in the slither venv). A target that pins a different pragma needs that version added; the adapter does not guess a compiler version."
+    }
+  },
+  "notes": [
+    "Every engine is installed into its own venv under ~/.blackheart/venvs (or a downloaded binary under ~/.blackheart/bin), never into the system interpreter: slither-analyzer ships a top-level `tests` package that shadows this repository's tests/ directory.",
+    "The shared venv path means crytic-compile is available to Echidna and Medusa without a second install.",
+    "Nothing here needs a paid service, an API key, or network access after installation.",
+    "bytecode_tools are engines that consume EVM bytecode rather than Solidity source (currently heimdall). They are installed and verified by the same manifest machinery but are deliberately kept out of SOLIDITY_ENGINES, so the source-analysis orchestrator never hands them a project they cannot read."
+  ],
+  "bytecode_tools": {
+    "heimdall": {
+      "version": "0.9.2",
+      "kind": "github-release",
+      "repo": "Jon-Becker/heimdall-rs",
+      "tag_template": "0.9.3",
+      "asset_template": "heimdall-{os}-{arch}",
+      "asset_os": {
+        "x86_64": "linux",
+        "aarch64": "linux"
+      },
+      "asset_arch": {
+        "x86_64": "amd64",
+        "aarch64": "arm64"
+      },
+      "asset_is_binary": true,
+      "sha256": "8d58c97f56d584d5d0737d0d0895fc8c68b7b8b2b680f2a7842245789f0b4868",
+      "binary": "heimdall",
+      "upstream": "https://github.com/Jon-Becker/heimdall-rs",
+      "docs": "https://github.com/Jon-Becker/heimdall-rs/wiki",
+      "verified_on": "2026-11-21",
+      "license": "MIT",
+      "methods": [
+        "decompilation",
+        "cfg-recovery",
+        "abi-recovery"
+      ],
+      "target_types": [
+        "evm-bytecode",
+        "deployed-address"
+      ],
+      "known_incompatibilities": [
+        "Operates on EVM runtime bytecode only: it takes a deployed address, a hex blob or a .bin file, never a Solidity source tree. It is therefore not part of SOLIDITY_ENGINES and is not driven by the source-analysis orchestrator.",
+        "Without --include-sol it writes only abi.json; the decompiled source requires that flag.",
+        "Function names are unresolved unless a selector database is reachable, so output carries Unresolved_<selector> placeholders offline."
+      ],
+      "resource_notes": "Native Rust binary, ~14 MB, no runtime dependencies. A 2 KB runtime decompiles in a few seconds; large contracts take minutes. The pinned sha256 is a reproducibility pin computed from the official release asset on the verified_on date, not an upstream-signed attestation: it detects a silent re-upload, not a compromised maintainer. The 0.9.3 release tag ships a binary that reports itself as 0.9.2, so version is pinned to what the binary prints, which is what doctor compares."
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "fuzzing": {
+    "workers": 4,
+    "testLimit": 30000,
+    "shrinkLimit": 5000,
+    "seed": "0x1234567890abcdef",
+    "callSequenceLength": 100,
+    "corpusDirectory": "corpus/medusa",
+    "coverageEnabled": true,
+    "targetContracts": [],
+    "predeployedContracts": {},
+    "deploymentOrder": [],
+    "targetContractsBalances": [],
+    "constructorArgs": {},
+    "deployerAddress": "0x30000",
+    "senderAddresses": [
+      "0x10000",
+      "0x20000",
+      "0x30000"
+    ],
+    "blockNumberDelayMax": 60480,
+    "blockTimestampDelayMax": 604800,
+    "assertionChecking": true,
+    "callOverride": false,
+    "fuzzing": {}
+  },
+  "compilation": {
+    "platform": "crytic-compile",
+    "platformConfig": {
+      "target": ".",
+      "solc": "0.8.25"
+    }
+  },
+  "logging": {
+    "level": "info"
+  }
+}

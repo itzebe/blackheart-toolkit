@@ -1,0 +1,12 @@
+# Echidna configuration for the Hyperliquid Bridge2 property harness.
+# Run: echidna . --contract Bridge2Echidna --config test/echidna.yaml
+testMode: property
+testLimit: 50000
+seqLen: 100
+shrinkLimit: 5000
+# The harness deploys Bridge2 itself and mints USDC via MockUSDC, so it needs no
+# special funding. NOTE: do NOT set balanceContract/balanceAddr to 2**128 values
+# (e.g. 0xffffffffffffffffffffffffffffffff) -- Echidna treats that as a negative
+# signed value and the deployer then cannot pay for deployment, so every run
+# fails with "Deploying the contract ... failed". Default balances are correct.
+cryticArgs: ["--foundry-compile-all"]

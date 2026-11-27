@@ -1,0 +1,25 @@
+[profile.default]
+# Compile the real, in-scope wrapper source fetched into vendor/ by fetch.sh.
+src = "vendor/src"
+test = "test"
+out = "out"
+libs = ["vendor/lib"]
+solc = "0.8.28"
+optimizer = true
+optimizer_runs = 200
+evm_version = "Cancun"
+fs_permissions = [{ access = "read-write", path = "./" }]
+
+# Stateful invariant search over the real wrapper. Kept modest so the fork run
+# finishes in a couple of minutes; raise with --invariant-runs/--invariant-depth
+# for a deeper campaign.
+[invariant]
+runs = 48
+depth = 40
+fail_on_revert = false
+
+# Keyless, free public RPC used only to create a *local* fork. Nothing is ever
+# broadcast; `forge test` runs entirely in-process. Override by exporting
+# BLACKHEART_ETH_RPC. The test itself falls back to this default via vm.envOr.
+[profile.fork]
+eth_rpc_url = "https://gateway.tenderly.co/public/mainnet"

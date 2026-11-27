@@ -1,0 +1,6 @@
+# The vendored UMA source is AGPL-3.0 and is re-created by fetch.sh, never
+# committed (matches every other harness in this repo).
+/vendor/
+/vendor-managed-oracle/
+# The in-scope source is copied out of the pinned vendor checkout by fetch.sh.
+/src/

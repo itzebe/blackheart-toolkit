@@ -1,0 +1,23 @@
+{
+  "$comment": "Template for a BLACKHEART finding. Every evidence id must refer to an artefact produced by a real command. A finding is CONFIRMED only when all seven gates PASS and an independent verifier reproduced it.",
+  "finding_id": "<target>:<short-slug>",
+  "title": "<plain-language vulnerability title>",
+  "target": "<asset under test>",
+  "component": "<contract/function or endpoint>",
+  "scope_reference": "<official scope entry, or 'local reference target'>",
+  "classification": "NEEDS_MORE_EVIDENCE",
+  "severity": "info",
+  "category": "<asset-theft|auth-bypass|rounding-precision|...>",
+  "prerequisites": ["<what the attacker must be able to do>"],
+  "root_cause": "<the precise defect and why it exists>",
+  "reproduction_steps": ["<minimal, deterministic steps>"],
+  "poc_path": "<path::test-name>",
+  "expected_behavior": "<what should happen>",
+  "actual_behavior": "<what actually happens>",
+  "impact": "<measurable consequence>",
+  "commands": ["<exact command that was run>"],
+  "evidence_ids": ["ev-<sha256-prefix>"],
+  "gates": [],
+  "limitations": ["<honest limitations>"],
+  "verification_notes": ""
+}

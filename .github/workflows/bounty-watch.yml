@@ -1,0 +1,295 @@
+name: bounty-watch
+
+# Hourly, evidence-driven bounty change intelligence.
+#
+# Every run is read-only against the world: official policy pages, the GitHub
+# REST API and public JSON-RPC. The only writes are (a) the durable state cache,
+# (b) workflow artifacts, and (c) GitHub issues that summarise a lead or a gap.
+# No transaction is ever sent, no target is tested, and no program is contacted.
+#
+# Cost: stdlib-only Python on the runner's preinstalled interpreter, no pip
+# install, no paid API. On a private repository this is ~720 job-minutes/month
+# against the 2,000 free minutes (see docs/BOUNTY_WATCH.md).
+
+on:
+  schedule:
+    # Hourly at minute 7 (off the hour to avoid the cron stampede). UTC.
+    - cron: "7 * * * *"
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Optional single target slug (e.g. lido)"
+        required: false
+        type: string
+      email:
+        description: "Send email when SMTP secrets are configured"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  # One run at a time; never let two cycles interleave state.
+  group: bounty-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Optional delivery path. Without these the run still reports in-repo and
+      # in issues; it simply does not email.
+      SMTP_HOST: ${{ secrets.SMTP_HOST }}
+      SMTP_PORT: ${{ secrets.SMTP_PORT }}
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      SMTP_PASS: ${{ secrets.SMTP_PASS }}
+      SMTP_FROM: ${{ secrets.SMTP_FROM }}
+      MAIL_TO: ${{ secrets.MAIL_TO }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore durable monitoring state
+        uses: actions/cache/restore@v4
+        with:
+          path: research/bounty-monitor/state
+          key: bounty-watch-state-${{ github.run_id }}
+          restore-keys: |
+            bounty-watch-state-
+
+      - name: Run monitoring cycle
+        id: cycle
+        run: |
+          set +e
+          args="--state research/bounty-monitor/state --out research/bounty-monitor --json"
+          target="${{ github.event.inputs.target }}"
+          if [ -n "$target" ]; then
+            case "$target" in
+              *[!a-z0-9-]*) echo "::error::invalid target slug"; exit 2 ;;
+            esac
+            args="$args --target $target"
+          fi
+          if [ "${{ github.event.inputs.email }}" = "true" ] && [ -n "$SMTP_HOST" ]; then
+            args="$args --email"
+          fi
+          python3 -m blackheart watch cycle $args > cycle.json
+          code=$?
+          set -e
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          d = json.load(open("cycle.json"))
+          c = d["counts"]
+          print("## Bounty watch cycle " + d["cycle_id"])
+          print()
+          print(f"- targets: {c['targets']} · events: {c['events']} · deduped: {c['deduped']}")
+          print(f"- actionable: {c['NEW ACTIONABLE CHANGE']} · investigate: {c['INVESTIGATE']} "
+                f"· policy-blocked: {c['POLICY BLOCKED']} · inaccessible: {c['SOURCE INACCESSIBLE']}")
+          print(f"- exit code: {d['exit_code']}")
+          leads = [l for t in d["targets"] for l in t["leads"]
+                   if l["status"] in ("NEW ACTIONABLE CHANGE", "INVESTIGATE", "POLICY BLOCKED")]
+          if leads:
+              print()
+              print("| target | component | status | score | change |")
+              print("| --- | --- | --- | ---: | --- |")
+              for l in leads[:20]:
+                  print(f"| `{l['target']}` | `{l['event']['component']}` | {l['status']} "
+                        f"| {l['score']} | {l['event']['summary'][:120]} |")
+          PY
+          if [ "$code" = "2" ]; then
+            echo "::warning::one or more sources were unreadable; see the source-gaps issue"
+          fi
+
+      - name: Upload the cycle report and evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bounty-watch-${{ github.run_id }}
+          path: |
+            research/bounty-monitor/reports/
+            research/bounty-monitor/investigation-leads/
+            research/bounty-monitor/source-diffs/
+            research/bounty-monitor/state/
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Save durable monitoring state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: research/bounty-monitor/state
+          key: bounty-watch-state-${{ github.run_id }}
+
+      - name: Publish deduplicated issues
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, pathlib, subprocess, sys
+
+          def gh(*args, input_text=None):
+              return subprocess.run(
+                  ["gh", *args], input=input_text, text=True,
+                  capture_output=True, check=False,
+              )
+
+          def body_hash(body: str) -> str:
+              return hashlib.sha256(body.encode()).hexdigest()[:16]
+
+          def find_open(title):
+              listed = gh("issue", "list", "--state", "open", "--label", "bounty-watch",
+                          "--search", f'"{title}" in:title', "--json", "number,title,body",
+                          "--limit", "20")
+              if listed.returncode != 0 or not listed.stdout.strip():
+                  return []
+              try:
+                  return json.loads(listed.stdout)
+              except ValueError:
+                  return []
+
+          def upsert(title, body):
+              marker = f"<!-- bounty-watch-hash: {body_hash(body)} -->"
+              full = body + "\n\n" + marker + "\n"
+              for item in find_open(title):
+                  if item.get("title") != title:
+                      continue
+                  if marker in (item.get("body") or ""):
+                      return
+                  edited = gh("issue", "edit", str(item["number"]),
+                              "--body-file", "-", input_text=full)
+                  if edited.returncode != 0:
+                      print(f"::warning::issue edit failed: {edited.stderr[:300]}")
+                  return
+              created = gh("issue", "create", "--title", title, "--label", "bounty-watch",
+                           "--body-file", "-", input_text=full)
+              if created.returncode != 0:
+                  print(f"::warning::issue create failed: {created.stderr[:300]}")
+
+          def close_if_open(title):
+              for item in find_open(title):
+                  if item.get("title") != title:
+                      continue
+                  gh("issue", "comment", str(item["number"]), "--body",
+                     "No longer present in the latest cycle; closing. "
+                     "(AI agent, OpenHands.)")
+                  gh("issue", "close", str(item["number"]))
+
+          gh("label", "create", "bounty-watch", "--color", "5319e7",
+             "--description", "Hourly bounty change intelligence (automated)")
+
+          try:
+              d = json.load(open("cycle.json"))
+          except Exception as exc:
+              print(f"::error::cannot read cycle.json: {exc}")
+              sys.exit(1)
+
+          cycle = d["cycle_id"]
+          leads = [l for t in d["targets"] for l in t["leads"]]
+          failures = [(t["target"]["slug"], f) for t in d["targets"] for f in t["failures"]]
+          gaps = [(t["target"]["slug"], g) for t in d["targets"] for g in t["gaps"]]
+
+          def lead_rows(statuses):
+              rows = [l for l in leads if l["status"] in statuses]
+              if not rows:
+                  return ""
+              out = ["| target | component | status | score | change |",
+                     "| --- | --- | --- | ---: | --- |"]
+              for l in rows:
+                  out.append(
+                      f"| `{l['target']}` | `{l['event']['component']}` | {l['status']} | "
+                      f"{l['score']} | {l['event']['summary'][:180]} |"
+                  )
+              return "\n".join(out)
+
+          def detailed(rows):
+              parts = []
+              for l in rows:
+                  path = pathlib.Path(
+                      f"research/bounty-monitor/investigation-leads/{cycle}-"
+                      f"{l['target']}-{l['event']['id'][:8]}.md"
+                  )
+                  if path.is_file():
+                      parts.append(path.read_text(encoding="utf-8")[:60000])
+              return "\n\n---\n\n".join(parts)
+
+          categories = [
+              ("actionable", ["NEW ACTIONABLE CHANGE"],
+               "A credible, permitted investigation opportunity was detected."),
+              ("investigate", ["INVESTIGATE"],
+               "A security-relevant change needs deeper analysis."),
+              ("policy-blocked", ["POLICY BLOCKED"],
+               "A security-relevant change exists, but the recorded participation gates "
+               "do not permit action. Do not test or submit."),
+          ]
+          for key, statuses, blurb in categories:
+              rows = [l for l in leads if l["status"] in statuses]
+              title = f"[bounty-watch] {key}"
+              if not rows:
+                  close_if_open(title)
+                  continue
+              body = "\n".join([
+                  "This issue was created by an AI agent (OpenHands) on behalf of the operator.",
+                  "",
+                  blurb,
+                  "",
+                  f"Cycle `{cycle}`. A change is a lead, not a confirmed vulnerability.",
+                  "",
+                  lead_rows(statuses),
+                  "",
+                  "## Detailed records",
+                  "",
+                  detailed(rows),
+                  "",
+                  "_No submission, program contact, mainnet transaction or production "
+                  "testing is authorized by this issue._",
+              ])
+              upsert(title, body)
+
+          title = "[bounty-watch] source gaps"
+          if not failures:
+              close_if_open(title)
+          else:
+              body = "\n".join([
+                  "This issue was created by an AI agent (OpenHands) on behalf of the operator.",
+                  "",
+                  "A source could not be read. This is a **gap**, not a clean result.",
+                  "",
+                  f"Cycle `{cycle}`.",
+                  "",
+                  "| target | failure |",
+                  "| --- | --- |",
+                  *[f"| `{s}` | {f[:300]} |" for s, f in failures[:80]],
+                  "",
+                  "Gaps not yet filled (no verified source recorded):",
+                  "",
+                  *[f"- `{s}`: {g}" for s, g in gaps[:80]],
+              ])
+              upsert(title, body)
+
+          print(f"published issues for cycle {cycle}")
+          PY
+
+      - name: Fail only on a total outage
+        if: steps.cycle.outputs.exit_code == '2'
+        run: |
+          python3 - <<'PY'
+          import json, sys
+          d = json.load(open("cycle.json"))
+          ok = 0
+          for t in d["targets"]:
+              for x in t.get("policy", []):
+                  ok += 1 if x.get("ok") else 0
+              for x in t.get("repos", []):
+                  ok += 1 if x.get("head") else 0
+              for x in t.get("contracts", []):
+                  ok += 1 if x.get("ok") else 0
+          print(f"successful observations: {ok}")
+          if ok == 0:
+              sys.exit("total outage: no source produced a successful observation")
+          print("::warning::partial source gaps were reported in the source-gaps issue")
+          PY
